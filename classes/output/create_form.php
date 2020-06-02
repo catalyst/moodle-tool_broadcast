@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Renderer class for manage broadcast page.
+ * Form to create broadcast message.
  *
  * @package    tool_broadcast
  * @copyright  2020 Matt Porritt <mattp@catalyst-au.net>
@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/formslib.php");
 
 /**
- * Course copy form class.
+ * Form to create broadcast message.
  *
  * @package    tool_broadcast
  * @copyright  2020 Matt Porritt <mattp@catalyst-au.net>
@@ -38,30 +38,31 @@ require_once("$CFG->libdir/formslib.php");
 class create_form extends \moodleform {
 
     /**
-     * Build form for the course copy settings.
+     * Build form for the broadcast message.
      *
      * {@inheritDoc}
      * @see \moodleform::definition()
      */
     public function definition() {
-        global $CFG, $OUTPUT, $USER;
 
         $mform = $this->_form;
 
         // Form heading.
-        $mform->addElement('html', \html_writer::div(get_string('copycoursedesc', 'backup'), 'form-description mb-3'));
+        $mform->addElement('html', \html_writer::div(get_string('createbroadcastdesc', 'tool_broadcast'), 'form-description mb-3'));
 
         // Course fullname.
-        $mform->addElement('text', 'fullname', get_string('fullnamecourse'), 'maxlength="254" size="50"');
-        $mform->addHelpButton('fullname', 'fullnamecourse');
-        $mform->addRule('fullname', get_string('missingfullname'), 'required', null, 'client');
-        $mform->setType('fullname', PARAM_TEXT);
+        $mform->addElement('text', 'title', get_string('broadcasttitle', 'tool_broadcast'), 'maxlength="254" size="50"');
+        $mform->addHelpButton('title', 'broadcasttitle');
+        $mform->addRule('title', get_string('missingbroadcasttitle', 'tool_broadcast'), 'required', null, 'client');
+        $mform->setType('title', PARAM_TEXT);
 
         // Course shortname.
-        $mform->addElement('text', 'shortname', get_string('shortnamecourse'), 'maxlength="100" size="20"');
-        $mform->addHelpButton('shortname', 'shortnamecourse');
-        $mform->addRule('shortname', get_string('missingshortname'), 'required', null, 'client');
-        $mform->setType('shortname', PARAM_TEXT);
+        $mform->addElement('text', 'message', get_string('broadcastmessage', 'tool_broadcast'), 'maxlength="100" size="20"');
+        $mform->addHelpButton('message', 'broadcastmessage');
+        $mform->addRule('message', get_string('missingbroadcastmessage', 'tool_broadcast'), 'required', null, 'client');
+        $mform->setType('message', PARAM_TEXT);
+
+        $this->add_action_buttons();
 
     }
 }

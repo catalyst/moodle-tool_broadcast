@@ -28,5 +28,14 @@ defined('MOODLE_INTERNAL') || die();
 $string['pluginname'] = 'Broadcast message';
 
 $string['addbroadcast'] = 'Add new broadcast';
+$string['createbroadcastdesc'] = 'Create a new broadcast message.';
 $string['broadcast:createbroadcasts'] = 'Can create broadcast message';
+$string['broadcastdetails'] = 'Enter broadcast details';
+$string['broadcastmessage'] = 'Broadcast message';
+$string['broadcastmessage_help'] = 'This is the body of the message used in the broadcast shown to users.';
+$string['broadcasttitle'] = 'Broadcast title';
+$string['broadcasttitle_help'] = 'This is the title used in the broadcast message shown to users.';
+$string['loading'] = 'Loading...';
 $string['manage'] = 'Mange broadcasts';
+$string['missingbroadcastmessage'] = 'Missing broadcast title';
+$string['missingbroadcasttitle'] = 'Missing broadcast title';

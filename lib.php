@@ -37,8 +37,7 @@ function tool_broadcast_output_fragment_new_base_form($args): string {
         parse_str($serialiseddata, $formdata);
     }
 
-    $context = context_course::instance($args['courseid']);
-    require_capability('tool/broadcast:createbroadcasts', $context);
+    require_capability('tool/broadcast:createbroadcasts', $args['context']);
 
     $mform = new \tool_broadcast\output\create_form(null, array(), 'post', '', array('class' => 'ignoredirty'), true, $formdata);
 

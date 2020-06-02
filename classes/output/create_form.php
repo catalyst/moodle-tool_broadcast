@@ -46,19 +46,24 @@ class create_form extends \moodleform {
     public function definition() {
 
         $mform = $this->_form;
+        $contextid = $this->_customdata['contextid'];
+
+        // Context ID.
+        $mform->addElement('hidden', 'contextid', $contextid);
+        $mform->setType('contextid', PARAM_INT);
 
         // Form heading.
         $mform->addElement('html', \html_writer::div(get_string('createbroadcastdesc', 'tool_broadcast'), 'form-description mb-3'));
 
         // Course fullname.
         $mform->addElement('text', 'title', get_string('broadcasttitle', 'tool_broadcast'), 'maxlength="254" size="50"');
-        $mform->addHelpButton('title', 'broadcasttitle');
+        $mform->addHelpButton('title', 'broadcasttitle', 'tool_broadcast');
         $mform->addRule('title', get_string('missingbroadcasttitle', 'tool_broadcast'), 'required', null, 'client');
         $mform->setType('title', PARAM_TEXT);
 
         // Course shortname.
         $mform->addElement('text', 'message', get_string('broadcastmessage', 'tool_broadcast'), 'maxlength="100" size="20"');
-        $mform->addHelpButton('message', 'broadcastmessage');
+        $mform->addHelpButton('message', 'broadcastmessage', 'tool_broadcast');
         $mform->addRule('message', get_string('missingbroadcastmessage', 'tool_broadcast'), 'required', null, 'client');
         $mform->setType('message', PARAM_TEXT);
 

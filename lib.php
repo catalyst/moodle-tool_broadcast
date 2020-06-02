@@ -37,9 +37,11 @@ function tool_broadcast_output_fragment_new_base_form($args): string {
         parse_str($serialiseddata, $formdata);
     }
 
-    require_capability('tool/broadcast:createbroadcasts', $args['context']);
+    $context = $args['context'];
+    require_capability('tool/broadcast:createbroadcasts', $context);
 
-    $mform = new \tool_broadcast\output\create_form(null, array(), 'post', '', array('class' => 'ignoredirty'), true, $formdata);
+    $mform = new \tool_broadcast\output\create_form(null, array('contextid' => $context->id),
+        'post', '', array('class' => 'ignoredirty'), true, $formdata);
 
     if (! empty($serialiseddata)) {
         // If we were passed non-empty form data we want the mform to call validation functions and show errors.

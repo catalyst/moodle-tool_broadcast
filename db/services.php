@@ -15,17 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Tool broadcast web service external functions and service definitions.
  *
- * @package     tool_broadcast
- * @copyright   2020 Matt Porritt <mattp@catalyst-au.net>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    tool_broadcast
+ * @copyright  2020 Matt Porritt <mattp@catalyst-au.net>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'tool_broadcast';
-$plugin->release = '2020060301';
-$plugin->version = 2020060301;
-$plugin->requires = 2018051700;
-$plugin->maturity = MATURITY_ALPHA;
+// Define the web service functions to install.
+$functions = array(
+    'tool_broadcast_submit_create_form' => array(
+        'classname' => 'tool_broadcast_external',
+        'methodname' => 'submit_create_form',
+        'classpath' => 'admin/tool/broadcast/externallib.php',
+        'description' => 'Handles broadcast message ajax form submission.',
+        'type' => 'write',
+        'ajax' => true
+    ),
+);

@@ -22,8 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['core/str', 'core/modal_factory', 'core/ajax', 'core/fragment', 'core/notification'],
-        function(Str, ModalFactory, Ajax, Fragment, Notification) {
+define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'core/fragment', 'core/notification'],
+        function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
 
     /**
      * Module level variables.
@@ -75,9 +75,13 @@ define(['core/str', 'core/modal_factory', 'core/ajax', 'core/fragment', 'core/no
         // Handle invalid form fields for better UX.
         let ariainvalid = modalObj.getRoot().find('[aria-invalid="true"]');
         let errorclasses = modalObj.getRoot().find('.error');
-        let invalid = ariainvalid.concat(errorclasses);
+        let invalid;
 
-        if (invalid.length) {
+        if (ariainvalid.length) {
+            invalid = ariainvalid.concat(errorclasses);
+        }
+
+        if (invalid !== undefined && invalid.length) {
             invalid.first().focus();
             return;
         }
@@ -115,12 +119,7 @@ define(['core/str', 'core/modal_factory', 'core/ajax', 'core/fragment', 'core/no
             .done((modal) => {
                 modalObj = modal;
                 // Explicitly handle form click events.
-                modalObj.getRoot().on('click', '#id_submitreturn', processModalForm);
-                modalObj.getRoot().on('click', '#id_submitdisplay', (e) => {
-                    e.formredirect = true;
-                    processModalForm(e);
-
-                });
+                modalObj.getRoot().on('click', '#id_submitbutton', processModalForm);
                 modalObj.getRoot().on('click', '#id_cancel', (e) => {
                     e.preventDefault();
                     modalObj.setBody(spinner);

@@ -27,4 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Broadcast message';
 
+$string['addbroadcast'] = 'Add new broadcast';
 $string['broadcast:createbroadcasts'] = 'Can create broadcast message';
+$string['manage'] = 'Mange broadcasts';

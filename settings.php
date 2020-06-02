@@ -26,11 +26,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
-    $ADMIN->add('local', new admin_category('local_broadcast', get_string('pluginname', 'local_broadcast')));
+    $ADMIN->add('root', new admin_category('tool_broadcast', get_string('pluginname', 'tool_broadcast')), 'security');
 
-    $workflowsettings = new admin_externalpage('local_broadcast_broadcastsettings',
-        get_string('manage', 'local_broadcast'),
-        new moodle_url('/admin/tool/trigger/manage.php'));
+    $workflowsettings = new admin_externalpage('tool_broadcast_broadcastsettings',
+        get_string('manage', 'tool_broadcast'),
+        new moodle_url('/admin/tool/broadcast/manage.php'));
 
     $ADMIN->add('tool_broadcast', $workflowsettings);
 

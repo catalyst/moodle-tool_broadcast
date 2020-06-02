@@ -33,17 +33,22 @@ require_login();
 $url = new moodle_url('/admin/tool/broadcast/manage.php', array('id' => $courseid));
 $course = get_course($courseid);
 
-
 // Security and access checks.
 require_login($course, false);
 $context = context_course::instance($course->id);
 require_capability('tool/broadcast:createbroadcasts', $context);
 
+$PAGE->set_url($url);
+$PAGE->set_pagelayout('admin');
+$PAGE->set_title(get_string('manage', 'tool_broadcast'));
+$PAGE->set_heading(get_string('manage', 'tool_broadcast'));
+
 // Load the javascript.
-//$PAGE->requires->js_call_amd('tool_broadcast/manage_broadcast', 'init', array($context->id));
+$PAGE->requires->js_call_amd('tool_broadcast/create_modal', 'init', array($context->id));
 
 // Build the page output.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('managebroadcast', 'tool_broadcast'));
+$output = $PAGE->get_renderer('tool_broadcast');
+echo $output->render_content();
 
 echo $OUTPUT->footer();

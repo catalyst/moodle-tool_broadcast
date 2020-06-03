@@ -67,7 +67,7 @@ class create_form extends \moodleform {
         $mform->addRule('message', get_string('missingbroadcastmessage', 'tool_broadcast'), 'required', null, 'client');
         $mform->setType('message', PARAM_TEXT);
 
-        $this->add_action_buttons();
+        $this->add_action_buttons(true, get_string('createbtn', 'tool_broadcast'));
 
     }
 }

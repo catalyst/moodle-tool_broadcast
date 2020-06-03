@@ -27,10 +27,13 @@ require_once(dirname(__FILE__) . '/../../../config.php');
 defined('MOODLE_INTERNAL') || die();
 
 $courseid = optional_param('id', 1, PARAM_INT); // Generic navigation return page switch.
+$page = optional_param('page', 0, PARAM_INT);
+$perpage = optional_param('perpage', 50, PARAM_INT);
 
 require_login();
 
-$url = new moodle_url('/admin/tool/broadcast/manage.php', array('id' => $courseid));
+$baseurl = $CFG->wwwroot . '/admin/tool/broadcast/manage.php';
+$url = new moodle_url($baseurl, array('id' => $courseid));
 $course = get_course($courseid);
 
 // Security and access checks.
@@ -49,6 +52,6 @@ $PAGE->requires->js_call_amd('tool_broadcast/create_modal', 'init', array($conte
 // Build the page output.
 echo $OUTPUT->header();
 $output = $PAGE->get_renderer('tool_broadcast');
-echo $output->render_content();
+echo $output->render_content($courseid, $baseurl, $page, $perpage);
 
 echo $OUTPUT->footer();

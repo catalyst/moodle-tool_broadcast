@@ -36,6 +36,29 @@ defined('MOODLE_INTERNAL') || die;
 class renderer extends \plugin_renderer_base {
 
     /**
+     * Render the html for the message management table.
+     *
+     * @param string $baseurl the base url to render the table on.
+     * @param int $page the page number for pagination.
+     * @param int $perpage amount of records per page for pagination.
+     * @param string $download dataformat type. One of csv, xhtml, ods, etc
+     *
+     * @return string $output html for display
+     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
+    private function render_message_table(int $courseid, string $baseurl, int $page = 0, int $perpage = 50) {
+        $url = new \moodle_url($baseurl, array('id' => $courseid));
+        $renderable = new broadcast_table('tool_broadcast', $url, $perpage, $page);
+        ob_start();
+        $renderable->out($renderable->pagesize, true);
+        $output = ob_get_contents();
+        ob_end_clean();
+
+        return $output;
+    }
+
+    /**
      * Html to add a button for adding a new broadcast.
      *
      * @return string html for the button.
@@ -50,8 +73,20 @@ class renderer extends \plugin_renderer_base {
         return $button;
     }
 
-    public function render_content(): string {
+    /**
+     *
+     * @param int $courseid
+     * @param string $baseurl
+     * @param int $page
+     * @param int $perpage
+     * @param string $download
+     * @return string
+     */
+    public function render_content(int $courseid, string $baseurl, int $page = 0,
+        int $perpage = 50, string $download = ''): string {
+
         $html = $this->render_add_button();
+        $html .= $this->render_message_table($courseid, $baseurl, $page, $perpage);
 
         return $html;
     }

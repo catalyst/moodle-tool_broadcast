@@ -69,11 +69,24 @@ class tool_broadcast_external extends external_api {
         $data = array();
         parse_str($formdata, $data);
 
-        error_log(print_r($data, true));
-        $context = context_course::instance($data['contextid']);
+        $context = context::instance_by_id($data['contextid']);
         self::validate_context($context);
 
-        return json_encode('');
+        $mform = new \tool_broadcast\output\create_form(
+            null,
+            array('contextid' => $context->id),
+            'post', '', ['class' => 'ignoredirty'], true, $data);
+
+        $mdata = $mform->get_data();
+
+        if ($mdata) {
+            $broadcast = new \tool_broadcast\broadcast();
+            $result = $broadcast->create_broadcast($mdata);
+        } else {
+            throw new moodle_exception('createbroadcastfail', 'tool_broadcast');
+        }
+
+        return json_encode($result);
     }
 
     /**

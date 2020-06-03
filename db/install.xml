@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="admin/tool/broadcast/db" VERSION="20200603" COMMENT="XMLDB file for Moodle admin/tool/broadcast"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="tool_broadcast" COMMENT="Broadcast message details">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="contextid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Context ID this broadcast applies to. Messages will get sent to this context and its children"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The title of the message"/>
+        <FIELD NAME="body" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The body of the message"/>
+        <FIELD NAME="loggedin" TYPE="binary" NOTNULL="true" SEQUENCE="false" COMMENT="If true then this broadcast message will only be sent to users who were logged in at the time of broadcast creation."/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time the broadcast was created"/>
+        <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Time the broadcast message starts"/>
+        <FIELD NAME="timeend" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time the broadcast message ends (expires)."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="contextid" UNIQUE="false" FIELDS="contextid"/>
+        <INDEX NAME="context_time" UNIQUE="false" FIELDS="contextid, timestart, timeend"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="tool_broadcast_users" COMMENT="Table stores user details of who has acknowledged messages">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="broadcastid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The ID of the broadcast message that relates to this user"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The id of the user who acknowledged the message"/>
+        <FIELD NAME="contextid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The context ID the user was in when they acknowledged the message"/>
+        <FIELD NAME="acktime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The timestamp when the user acknowledged the message."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="broadcastid" UNIQUE="false" FIELDS="broadcastid"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

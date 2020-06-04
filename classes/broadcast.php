@@ -55,6 +55,31 @@ class broadcast {
 
         $insertid = $DB->insert_record('tool_broadcast', $record);
 
+        // TODO: invalidate broadcast cache and make new cache.
+
         return $insertid;
+    }
+
+    public function get_broadcasts(int $contextid, int $userid): array {
+        global $DB;
+
+        $context = \context::instance_by_id($contextid);
+        $parentcontexts = $context->get_parent_context_ids(true);
+
+        // A broadcast message for this context or any of it's parents are valid.
+        // TODO: add filtering for dates
+        // TODO: add filtering for logged in user switch.
+
+        list($insql, $inparams) = $DB->get_in_or_equal($parentcontexts);
+        $sql = "SELECT b.id, b.title, b.body, b.loggedin, u.lastlogin
+                  FROM {tool_broadcast} b
+             LEFT JOIN {tool_broadcast_users} bu ON b.id = bu.broadcastid
+             LEFT JOIN {user} u ON bu.userid = u.id
+                 WHERE b.contextid $insql
+                       AND bu.userid is NULL
+                   ";
+        $records = $DB->get_records_sql($sql, $inparams);
+
+        return $records;
     }
 }

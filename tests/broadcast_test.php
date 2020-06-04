@@ -67,4 +67,45 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $this->assertEquals($formdata->title, $record->title);
         $this->assertEquals($formdata->message, $record->body);
     }
+
+    /**
+     * Test getting broadcast messages.
+     */
+    public function test_get_broadcasts() {
+        global $DB;
+
+        // Create a course with activity.
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $assignrow = $generator->create_module('assign', array(
+            'course' => $course->id,
+            'duedate' => 1585359375
+        ));
+
+        $assign = new assign(context_module::instance($assignrow->cmid), false, false);
+        $user = $generator->create_user();
+        $user->lastlogin = time() - 1000;
+
+        // Enrol user into the course.
+        $generator->enrol_user($user->id, $course->id, 'student');
+
+        $contextcourse = context_course::instance($course->id);
+        $contextassignid = $assign->get_context()->id;
+
+        // Mock up the form data for use in tests.
+        $formdata = new \stdClass;
+        $formdata->contextid = $contextcourse->id;
+        $formdata->title = 'foo';
+        $formdata->message = 'bar';
+
+        // Create the broadcast
+        $broadcast = new \tool_broadcast\broadcast();
+        $broadcastid = $broadcast->create_broadcast($formdata);
+
+        $broadcasts = $broadcast->get_broadcasts($contextassignid, $user->id);
+
+        $this->assertEquals($formdata->title, $broadcasts[$broadcastid]->title);
+        $this->assertEquals($formdata->message, $broadcasts[$broadcastid]->body);
+
+    }
 }

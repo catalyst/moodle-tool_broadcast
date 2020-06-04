@@ -55,3 +55,16 @@ function tool_broadcast_output_fragment_new_base_form($args): string {
 
     return $o;
 }
+
+/**
+ * Adds required JS and startup values for broadcast Modals.
+ */
+function tool_broadcast_before_footer(): void {
+    global $PAGE;
+
+    // TODO: check if there are any pending messages at page load time from the broadcast class.
+    // TODO: add an index for user id and message id.
+
+    $context = $PAGE->context;
+    $PAGE->requires->js_call_amd('tool_broadcast/broadcast_modal', 'init', array($context->id));
+}

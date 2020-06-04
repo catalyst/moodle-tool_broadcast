@@ -61,10 +61,11 @@ function tool_broadcast_output_fragment_new_base_form($args): string {
  */
 function tool_broadcast_before_footer(): void {
     global $PAGE;
-
-    // TODO: check if there are any pending messages at page load time from the broadcast class.
-    // TODO: add an index for user id and message id.
-
     $context = $PAGE->context;
-    $PAGE->requires->js_call_amd('tool_broadcast/broadcast_modal', 'init', array($context->id));
+
+    // Only include the required JS on this page if user has the required capability to view messages.
+    if (has_capability('tool/broadcast:viewbroadcasts', $context)) {
+        $PAGE->requires->js_call_amd('tool_broadcast/broadcast_modal', 'init', array($context->id));
+    }
+
 }

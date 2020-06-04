@@ -72,7 +72,6 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
      * Test getting broadcast messages.
      */
     public function test_get_broadcasts() {
-        global $DB;
 
         // Create a course with activity.
         $generator = $this->getDataGenerator();

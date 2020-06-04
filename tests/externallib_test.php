@@ -1,5 +1,4 @@
 <?php
-use repository_contentbank\browser\contentbank_browser_context_course;
 
 // This file is part of Moodle - http://moodle.org/
 //
@@ -28,7 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/admin/tool/broadcast/externallib.php');
 
 /**
  * Tool Broadcast webservice tests.
@@ -49,7 +47,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
     }
 
     /**
-     * Test ajax submission of course copy process.
+     * Test ajax submission of broadcast creation form.
      */
     public function test_submit_create_form() {
         global $DB;
@@ -83,6 +81,51 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
 
         $this->assertEquals($formdata->title, $record->title);
         $this->assertEquals($formdata->message, $record->body);
+
+    }
+
+    /**
+     * Test ajax webservice to get broadcast messages.
+     */
+    public function test_get_broadcasts() {
+        global $DB;
+
+        // Create a course with activity.
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $assignrow = $generator->create_module('assign', array(
+            'course' => $course->id,
+            'duedate' => 1585359375
+        ));
+
+        $assign = new assign(context_module::instance($assignrow->cmid), false, false);
+        $user = $generator->create_user();
+        $user->lastlogin = time() - 1000;
+        $this->setUser($user);
+
+        // Enrol user into the course.
+        $generator->enrol_user($user->id, $course->id, 'student');
+
+        $contextcourse = context_course::instance($course->id);
+        $contextassignid = $assign->get_context()->id;
+
+        // Mock up the form data for use in tests.
+        $formdata = new \stdClass;
+        $formdata->contextid = $contextcourse->id;
+        $formdata->title = 'foo';
+        $formdata->message = 'bar';
+
+        // Create the broadcast
+        $broadcast = new \tool_broadcast\broadcast();
+        $broadcastid = $broadcast->create_broadcast($formdata);
+
+        $returnvalue = tool_broadcast_external::get_broadcasts($contextassignid);
+
+        $returnjson = external_api::clean_returnvalue(tool_broadcast_external::get_broadcasts_returns(), $returnvalue);
+        $response = json_decode($returnjson, true);
+
+        $this->assertEquals($formdata->title, $response[$broadcastid]['title']);
+        $this->assertEquals($formdata->message, $response[$broadcastid]['body']);
 
     }
 }

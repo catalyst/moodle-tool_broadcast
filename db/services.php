@@ -29,9 +29,17 @@ $functions = array(
     'tool_broadcast_submit_create_form' => array(
         'classname' => 'tool_broadcast_external',
         'methodname' => 'submit_create_form',
-        'classpath' => 'admin/tool/broadcast/externallib.php',
+        'classpath' => '',
         'description' => 'Handles broadcast message ajax form submission.',
         'type' => 'write',
+        'ajax' => true
+    ),
+    'tool_broadcast_get_broadcasts' => array(
+        'classname' => 'tool_broadcast_external',
+        'methodname' => 'get_broadcasts',
+        'classpath' => '',
+        'description' => 'Handles broadcast message fetching.',
+        'type' => 'read',
         'ajax' => true
     ),
 );

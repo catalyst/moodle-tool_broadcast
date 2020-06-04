@@ -71,6 +71,7 @@ class tool_broadcast_external extends external_api {
 
         $context = context::instance_by_id($data['contextid']);
         self::validate_context($context);
+        require_capability('tool/broadcast:createbroadcasts', $context);
 
         $mform = new \tool_broadcast\output\create_form(
             null,
@@ -95,6 +96,57 @@ class tool_broadcast_external extends external_api {
      * @return external_description
      */
     public static function submit_create_form_returns() {
+        return new external_value(PARAM_RAW, 'JSON response.');
+    }
+
+    /**
+     * Returns description of method parameters
+     *
+     * @return external_function_parameters
+     */
+    public static function get_broadcasts_parameters() {
+        return new external_function_parameters(
+            array(
+                'contextid' => new external_value(PARAM_INT, 'Context id', VALUE_REQUIRED, null, NULL_NOT_ALLOWED)
+            )
+            );
+    }
+
+    /**
+     * Submit the broadcast create form.
+     *
+     * @param string $jsonformdata The data from the form, encoded as a json array.
+     * @return int new group id.
+     */
+    public static function get_broadcasts($contextid) {
+        global $USER;
+
+        // Release session lock.
+        \core\session\manager::write_close();
+
+        // We always must pass webservice params through validate_parameters.
+        $params = self::validate_parameters(
+            self::get_broadcasts_parameters(),
+            array('contextid' => $contextid)
+            );
+
+
+        $context = context::instance_by_id($contextid);
+        self::validate_context($context);
+        require_capability('tool/broadcast:viewbroadcasts', $context);
+
+        $broadcast = new \tool_broadcast\broadcast();
+        $broadcasts = $broadcast->get_broadcasts($context->id, $USER->id);
+
+        return json_encode($broadcasts);
+    }
+
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_description
+     */
+    public static function get_broadcasts_returns() {
         return new external_value(PARAM_RAW, 'JSON response.');
     }
 

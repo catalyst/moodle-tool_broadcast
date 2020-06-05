@@ -102,9 +102,8 @@ define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'cor
     };
 
     /**
-     * Updates the body of the modal window.
+     * Create the modal window.
      *
-     * @param {Object} formdata
      * @private
      */
     const createModal = () => {

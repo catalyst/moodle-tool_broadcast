@@ -61,6 +61,7 @@ define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'cor
                 // Display the message in the modal.
                 modalObj.setTitle(messageQueue[message].title);
                 modalObj.setBody(messageQueue[message].body);
+                modalObj.footer[0].dataset.id = messageQueue[message].id;
                 modalObj.show();
 
                 // remove the message from the queue
@@ -74,7 +75,9 @@ define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'cor
 
     const acceptMessage = () => {
         modalObj.setBody(spinner);
-        window.console.log('message accepted');
+        window.console.log(modalObj.footer[0].dataset.id);
+
+        // TODO: Call ajax to accept message.
     };
 
     /**

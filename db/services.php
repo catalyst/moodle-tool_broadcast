@@ -42,4 +42,21 @@ $functions = array(
         'type' => 'read',
         'ajax' => true
     ),
+    'tool_broadcast_check_broadcasts' => array(
+        'classname' => 'tool_broadcast_external',
+        'methodname' => 'check_broadcasts',
+        'classpath' => '',
+        'description' => 'checks if the users has a broadcast message.',
+        'loginrequired' => false,
+        'type' => 'read',
+        'ajax' => true
+    ),
+    'tool_broadcast_acknowledge_broadcast' => array(
+        'classname' => 'tool_broadcast_external',
+        'methodname' => 'acknowledge_broadcast',
+        'classpath' => '',
+        'description' => 'Handles user acknowledgement of a broadcast.',
+        'type' => 'write',
+        'ajax' => true
+    ),
 );

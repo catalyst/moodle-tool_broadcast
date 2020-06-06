@@ -82,4 +82,48 @@ class broadcast {
 
         return $records;
     }
+
+    public function check_broadcasts(int $contextid, int $userid): bool {
+        global $DB;
+
+        $context = \context::instance_by_id($contextid, MUST_EXIST);
+        $parentcontexts = $context->get_parent_context_ids(true);
+
+        // A broadcast message for this context or any of it's parents are valid.
+        // TODO: add filtering for dates
+        // TODO: add filtering for logged in user switch.
+
+        list($insql, $inparams) = $DB->get_in_or_equal($parentcontexts);
+        $sql = "SELECT b.id, b.title, b.body, b.loggedin, u.lastlogin
+                  FROM {tool_broadcast} b
+             LEFT JOIN {tool_broadcast_users} bu ON b.id = bu.broadcastid
+             LEFT JOIN {user} u ON bu.userid = u.id
+                 WHERE b.contextid $insql
+                       AND bu.userid is NULL
+                   ";
+        $exists = $DB->record_exists_sql($sql, $inparams);
+
+        return $exists;
+    }
+
+    public function acknowledge_broadcast(int $broadcastid, int $contextid, int $userid): void {
+        global $DB;
+
+        \context::instance_by_id($contextid, MUST_EXIST); // Confirm context exists, throw error if not.
+
+        $exists = $DB->record_exists('tool_broadcast', array('id' => $broadcastid)); // Confirm broadcast exists.
+
+        if ($exists) {
+            $ackrecord = new \stdClass();
+            $ackrecord->broadcastid = $broadcastid;
+            $ackrecord->userid = $userid;
+            $ackrecord->contextid = $contextid;
+            $ackrecord->acktime = time();
+
+            $DB->insert_record('tool_broadcast_users', $ackrecord);
+        } else {
+            new \moodle_exception('Broadcast does not exist.');
+        }
+    }
+
 }

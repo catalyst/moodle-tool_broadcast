@@ -88,7 +88,6 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
      * Test ajax webservice to get broadcast messages.
      */
     public function test_get_broadcasts() {
-        global $DB;
 
         // Create a course with activity.
         $generator = $this->getDataGenerator();
@@ -126,6 +125,91 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
 
         $this->assertEquals($formdata->title, $response[$broadcastid]['title']);
         $this->assertEquals($formdata->message, $response[$broadcastid]['body']);
+
+    }
+
+    /**
+     * Test ajax webservice to check if there are broadcast messages.
+     */
+    public function test_check_broadcasts() {
+
+        // Create a course with activity.
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $assignrow = $generator->create_module('assign', array(
+            'course' => $course->id,
+            'duedate' => 1585359375
+        ));
+
+        $assign = new assign(context_module::instance($assignrow->cmid), false, false);
+        $user = $generator->create_user();
+        $user->lastlogin = time() - 1000;
+        $this->setUser($user);
+
+        // Enrol user into the course.
+        $generator->enrol_user($user->id, $course->id, 'student');
+
+        $contextcourse = context_course::instance($course->id);
+        $contextassignid = $assign->get_context()->id;
+
+        // Mock up the form data for use in tests.
+        $formdata = new \stdClass;
+        $formdata->contextid = $contextcourse->id;
+        $formdata->title = 'foo';
+        $formdata->message = 'bar';
+
+        // Create the broadcast
+        $broadcast = new \tool_broadcast\broadcast();
+        $broadcastid = $broadcast->create_broadcast($formdata);
+
+        $returnvalue = tool_broadcast_external::check_broadcasts($contextassignid);
+
+        $returnjson = external_api::clean_returnvalue(tool_broadcast_external::check_broadcasts_returns(), $returnvalue);
+        $response = json_decode($returnjson, true);
+
+        $this->assertTrue($response);
+    }
+
+    /**
+     * Test ajax webservice to acknowledge broadcast messages.
+     */
+    public function test_acknowledge_broadcast() {
+
+        // Create a course with activity.
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $assignrow = $generator->create_module('assign', array(
+            'course' => $course->id,
+            'duedate' => 1585359375
+        ));
+
+        $assign = new assign(context_module::instance($assignrow->cmid), false, false);
+        $user = $generator->create_user();
+        $user->lastlogin = time() - 1000;
+        $this->setUser($user);
+
+        // Enrol user into the course.
+        $generator->enrol_user($user->id, $course->id, 'student');
+
+        $contextcourse = context_course::instance($course->id);
+        $contextassignid = $assign->get_context()->id;
+
+        // Mock up the form data for use in tests.
+        $formdata = new \stdClass;
+        $formdata->contextid = $contextcourse->id;
+        $formdata->title = 'foo';
+        $formdata->message = 'bar';
+
+        // Create the broadcast
+        $broadcast = new \tool_broadcast\broadcast();
+        $broadcastid = $broadcast->create_broadcast($formdata);
+
+        $returnvalue = tool_broadcast_external::acknowledge_broadcast($contextassignid, $broadcastid);
+
+        $returnjson = external_api::clean_returnvalue(tool_broadcast_external::acknowledge_broadcast_returns(), $returnvalue);
+        $response = json_decode($returnjson, true);
+
+        $this->assertTrue($response);
 
     }
 }

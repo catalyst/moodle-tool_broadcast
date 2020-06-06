@@ -113,10 +113,10 @@ class tool_broadcast_external extends external_api {
     }
 
     /**
-     * Submit the broadcast create form.
+     * Get broadcast messages.
      *
-     * @param string $jsonformdata The data from the form, encoded as a json array.
-     * @return int new group id.
+     * @param int $contextid The context id of the user.
+     * @return string $broadcasts JSON array of broadcast messages.
      */
     public static function get_broadcasts($contextid) {
         global $USER;
@@ -125,11 +125,10 @@ class tool_broadcast_external extends external_api {
         \core\session\manager::write_close();
 
         // We always must pass webservice params through validate_parameters.
-        $params = self::validate_parameters(
+        self::validate_parameters(
             self::get_broadcasts_parameters(),
             array('contextid' => $contextid)
             );
-
 
         $context = context::instance_by_id($contextid);
         self::validate_context($context);
@@ -147,6 +146,102 @@ class tool_broadcast_external extends external_api {
      * @return external_description
      */
     public static function get_broadcasts_returns() {
+        return new external_value(PARAM_RAW, 'JSON response.');
+    }
+
+    /**
+     * Returns description of method parameters
+     *
+     *
+     * @return external_function_parameters
+     */
+    public static function check_broadcasts_parameters() {
+        return new external_function_parameters(
+            array(
+                'contextid' => new external_value(PARAM_INT, 'Context id', VALUE_REQUIRED, null, NULL_NOT_ALLOWED)
+            )
+            );
+    }
+
+    /**
+     * Check for broadcasts messages.
+     *
+     * @param int $contextid The context id of the user.
+     * @return string $broadcasts JSON bool, true of user has broadcast messages.
+     */
+    public static function check_broadcasts($contextid) {
+        global $USER;
+
+        // We always must pass webservice params through validate_parameters.
+        self::validate_parameters(
+            self::check_broadcasts_parameters(),
+            array('contextid' => $contextid)
+            );
+
+        $broadcast = new \tool_broadcast\broadcast();
+        $broadcasts = $broadcast->check_broadcasts($contextid, $USER->id);
+
+        return json_encode($broadcasts);
+    }
+
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_description
+     */
+    public static function check_broadcasts_returns() {
+        return new external_value(PARAM_RAW, 'JSON response.');
+    }
+
+    /**
+     * Returns description of method parameters
+     *
+     * @return external_function_parameters
+     */
+    public static function acknowledge_broadcast_parameters() {
+        return new external_function_parameters(
+            array(
+                'contextid' => new external_value(PARAM_INT, 'Context id', VALUE_REQUIRED, null, NULL_NOT_ALLOWED),
+                'broadcastid' => new external_value(PARAM_INT, 'Broadcast id', VALUE_REQUIRED, null, NULL_NOT_ALLOWED)
+            )
+            );
+    }
+
+    /**
+     * Acknowledge broadcast messages.
+     *
+     * @param int $contextid The context id of the user.
+     * @param int $broadcastid The broadcast id to acknowledge.
+     * @return string $broadcasts JSON array of broadcast messages.
+     */
+    public static function acknowledge_broadcast($contextid, $broadcastid) {
+        global $USER;
+
+        // Release session lock.
+        \core\session\manager::write_close();
+
+        // We always must pass webservice params through validate_parameters.
+        self::validate_parameters(
+            self::acknowledge_broadcast_parameters(),
+            array('contextid' => $contextid, 'broadcastid' => $broadcastid)
+            );
+
+        $context = context::instance_by_id($contextid);
+        self::validate_context($context);
+        require_capability('tool/broadcast:viewbroadcasts', $context);
+
+        $broadcast = new \tool_broadcast\broadcast();
+        $broadcast->acknowledge_broadcast($broadcastid, $context->id, $USER->id);
+
+        return json_encode(true);
+    }
+
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_description
+     */
+    public static function acknowledge_broadcast_returns() {
         return new external_value(PARAM_RAW, 'JSON response.');
     }
 

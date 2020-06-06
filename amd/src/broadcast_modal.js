@@ -75,9 +75,14 @@ define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'cor
 
     const acceptMessage = () => {
         modalObj.setBody(spinner);
-        window.console.log(modalObj.footer[0].dataset.id);
+        let broadcastid = modalObj.footer[0].dataset.id;
 
-        // TODO: Call ajax to accept message.
+        Ajax.call([{
+            methodname: 'tool_broadcast_acknowledge_broadcast',
+            args: {contextid: contextid, broadcastid: broadcastid}
+        }])[0].fail(() => {
+            Notification.exception(new Error('Failed to acknowledge broadcast messages'));
+        });
     };
 
     /**

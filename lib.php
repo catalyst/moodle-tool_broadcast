@@ -62,9 +62,11 @@ function tool_broadcast_output_fragment_new_base_form($args): string {
 function tool_broadcast_before_footer(): void {
     global $PAGE;
     $context = $PAGE->context;
+    $createurl = new moodle_url('/admin/tool/broadcast/manage.php', array('id' => 1));
+    $createpage = $PAGE->url->compare($createurl);
 
     // Only include the required JS on this page if user has the required capability to view messages.
-    if (has_capability('tool/broadcast:viewbroadcasts', $context)) {
+    if (has_capability('tool/broadcast:viewbroadcasts', $context) && !$createpage) {
         $PAGE->requires->js_call_amd('tool_broadcast/broadcast_modal', 'init', array($context->id));
     }
 

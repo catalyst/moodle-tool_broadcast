@@ -36,7 +36,11 @@ define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'cor
         + '</p>';
     var messageQueue = {};
 
-    const checkMessages = () => {
+    /**
+     * Get broadcast messages for this user.
+     * This is only called if the check messages method returns true.
+     */
+    const getMessages = () => {
         Ajax.call([{
             methodname: 'tool_broadcast_get_broadcasts',
             args: {contextid: contextid}
@@ -49,12 +53,29 @@ define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'cor
         }).fail(() => {
             Notification.exception(new Error('Failed to get broadcast messages'));
         });
+    };
+
+    /**
+     * Check to see if there are messages available.
+     * This is done as a discrete ajax call, so we don't update the user session
+     * everytime we poll, and prevent the user from being logged out due to inactivity.
+     */
+    const checkMessages = () => {
+        Ajax.call([{
+            methodname: 'tool_broadcast_check_broadcasts',
+            args: {contextid: contextid}
+        }])[0].done((response) => {
+            let responseObj = JSON.parse(response);
+            if (responseObj) { // We have messages.
+                getMessages();
+            }
+        }).fail(() => {
+            Notification.exception(new Error('Failed to get broadcast messages'));
+        });
 
     };
 
     const displayMessages = () => {
-         //Check the queue for messages.
-
         // If modal window is not currently displayed, check for queue messages.
         if (!modalObj.getRoot()[0].classList.contains('show')) {
             for (const message in messageQueue) {

@@ -64,7 +64,7 @@ define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'cor
         Ajax.call([{
             methodname: 'tool_broadcast_check_broadcasts',
             args: {contextid: contextid}
-        }])[0].done((response) => {
+        }], true, false)[0].done((response) => {
             let responseObj = JSON.parse(response);
             if (responseObj) { // We have messages.
                 getMessages();

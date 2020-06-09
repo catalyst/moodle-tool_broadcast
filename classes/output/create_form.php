@@ -55,18 +55,82 @@ class create_form extends \moodleform {
         // Form heading.
         $mform->addElement('html', \html_writer::div(get_string('createbroadcastdesc', 'tool_broadcast'), 'form-description mb-3'));
 
-        // Course fullname.
-        $mform->addElement('text', 'title', get_string('broadcasttitle', 'tool_broadcast'), 'maxlength="254" size="50"');
+        // Broadcast message title.
+        $mform->addElement('text', 'title', get_string('broadcasttitle', 'tool_broadcast'), 'maxlength="254" size="58"');
         $mform->addHelpButton('title', 'broadcasttitle', 'tool_broadcast');
         $mform->addRule('title', get_string('missingbroadcasttitle', 'tool_broadcast'), 'required', null, 'client');
         $mform->setType('title', PARAM_TEXT);
 
-        // Course shortname.
-        $mform->addElement('text', 'message', get_string('broadcastmessage', 'tool_broadcast'), 'maxlength="100" size="20"');
+        // Broadcast message body.
+        $bodyoptions = array(
+            'subdirs'=>0,
+            'maxbytes'=>0,
+            'maxfiles'=>0,
+            'changeformat'=>0,
+            'context'=>null,
+            'noclean'=>0,
+            'trusttext'=>0,
+            'enable_filemanagement' => false,
+            'autosave' => false);
+        $bodysize = array('rows' => 5, 'cols' => 30);
+        $mform->addElement('editor', 'message', get_string('broadcastmessage', 'tool_broadcast'), $bodysize, $bodyoptions);
         $mform->addHelpButton('message', 'broadcastmessage', 'tool_broadcast');
         $mform->addRule('message', get_string('missingbroadcastmessage', 'tool_broadcast'), 'required', null, 'client');
-        $mform->setType('message', PARAM_TEXT);
+        $mform->setType('message', PARAM_RAW);
 
+        // Scope settings.
+        $scopesite = array(
+            0 => get_string('scopesite:site', 'tool_broadcast'),
+            1 => get_string('scopesite:category', 'tool_broadcast'),
+            2 => get_string('scopesite:course', 'tool_broadcast')
+        );
+        $mform->addElement('select', 'scopesite', get_string('scopesite', 'tool_broadcast'), $scopesite);
+        $mform->addHelpButton('scopesite', 'scopesite', 'tool_broadcast');
+
+        $categories = \core_course_category::make_categories_list('tool/broadcast:createbroadcasts');
+
+        $categoryoptions = array(
+            'multiple' => false,
+            'placeholder' =>  get_string('findcategory', 'tool_broadcast'),
+            'noselectionstring' => get_string('findcategory', 'tool_broadcast'),
+        );
+        $mform->addElement('autocomplete', 'categories', get_string('categories', 'tool_broadcast'), $categories, $categoryoptions);
+        $mform->hideIf('categories', 'scopesite', 'ne', 1);
+
+        $broadcast = new \tool_broadcast\broadcast();
+        $courses = $broadcast->get_courses();
+
+        $courseoptions = array(
+            'multiple' => false,
+            'placeholder' =>  get_string('findcourse', 'tool_broadcast'),
+            'noselectionstring' => get_string('findcourse', 'tool_broadcast'),
+        );
+        $mform->addElement('autocomplete', 'courses', get_string('courses', 'tool_broadcast'), $courses, $courseoptions);
+        $mform->hideIf('courses', 'scopesite', 'ne', 2);
+
+        // Active date.
+        $activeoptions = array(
+            'startyear' => date("Y"),
+            'stopyear'  => 2030,
+        );
+        $mform->addElement('date_time_selector', 'activefrom', get_string('activefrom', 'tool_broadcast'), $activeoptions);
+        $mform->addHelpButton('activefrom', 'activefrom', 'tool_broadcast');
+
+        // Expiry date.
+        $expiryoptions = array(
+            'startyear' => date("Y"),
+            'stopyear'  => 2030,
+            'defaulttime' => time() + HOURSECS
+        );
+        $mform->addElement('date_time_selector', 'expiry', get_string('expiry', 'tool_broadcast'), $expiryoptions);
+        $mform->addHelpButton('expiry', 'expiry', 'tool_broadcast');
+
+        // Logged in users.
+        $mform->addElement('advcheckbox', 'loggedin', get_string('loggedin', 'tool_broadcast'),
+            get_string('loggedinonly', 'tool_broadcast'), array(), array(0, 1));
+        $mform->addHelpButton('loggedin', 'loggedin', 'tool_broadcast');
+
+        // Action buttons.
         $this->add_action_buttons(true, get_string('createbtn', 'tool_broadcast'));
 
     }

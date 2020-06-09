@@ -24,6 +24,8 @@
 
 namespace tool_broadcast;
 
+use core\access\get_user_capability_course_helper;
+
 defined('MOODLE_INTERNAL') || die;
 
 /**
@@ -44,18 +46,25 @@ class broadcast {
     public function create_broadcast(\stdClass $formdata): int {
         global $DB;
 
+        if (!empty($formdata->categories)) {
+            $contextid = \context_coursecat::instance($formdata->categories)->id;
+        } else if (!empty($formdata->courses)) {
+            $contextid = \context_course::instance($formdata->courses);
+        } else {
+            $contextid = 1;
+        }
+
         $record = new \stdClass();
-        $record->contextid = $formdata->contextid;
+        $record->contextid = $contextid;
         $record->title = $formdata->title;
-        $record->body = $formdata->message;
-        $record->loggedin = false;
+        $record->body = $formdata->message['text'];
+        $record->bodyformat = $formdata->message['format'];
+        $record->loggedin = $formdata->loggedin;
         $record->timecreated = time();
-        $record->timestart = 0;
-        $record->timeend = 0;
+        $record->timestart = $formdata->activefrom;
+        $record->timeend = $formdata->expiry;
 
         $insertid = $DB->insert_record('tool_broadcast', $record);
-
-        // TODO: invalidate broadcast cache and make new cache.
 
         return $insertid;
     }
@@ -124,6 +133,25 @@ class broadcast {
         } else {
             new \moodle_exception('Broadcast does not exist.');
         }
+    }
+
+    public function get_courses(): array {
+
+        $courses = array();
+        $allcourses = get_courses('all', 'c.sortorder ASC', 'c.id, c.fullname, c.visible');
+        unset($allcourses[SITEID]);
+
+        foreach ($allcourses as $course) {
+            $context = \context_course::instance($course->id);
+            if (!$course->visible || !has_capability('tool/broadcast:createbroadcasts', $context)) {
+                continue;
+            }
+
+            $courses[$course->id] = $course->fullname;
+
+        }
+
+        return $courses;
     }
 
 }

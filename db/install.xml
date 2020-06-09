@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="admin/tool/broadcast/db" VERSION="20200603" COMMENT="XMLDB file for Moodle admin/tool/broadcast"
+<XMLDB PATH="admin/tool/broadcast/db" VERSION="20200609" COMMENT="XMLDB file for Moodle admin/tool/broadcast"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
 >
@@ -10,6 +10,7 @@
         <FIELD NAME="contextid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Context ID this broadcast applies to. Messages will get sent to this context and its children"/>
         <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The title of the message"/>
         <FIELD NAME="body" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The body of the message"/>
+        <FIELD NAME="bodyformat" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="The format of the body text. HTML etc."/>
         <FIELD NAME="loggedin" TYPE="binary" NOTNULL="true" SEQUENCE="false" COMMENT="If true then this broadcast message will only be sent to users who were logged in at the time of broadcast creation."/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time the broadcast was created"/>
         <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Time the broadcast message starts"/>

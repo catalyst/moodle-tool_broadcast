@@ -49,7 +49,7 @@ class renderer extends \plugin_renderer_base {
      */
     private function render_message_table(int $courseid, string $baseurl, int $page = 0, int $perpage = 50) {
         $url = new \moodle_url($baseurl, array('id' => $courseid));
-        $renderable = new broadcast_table('tool_broadcast', $url, $perpage, $page);
+        $renderable = new broadcast_table('tool_broadcast', $baseurl, $perpage, $page);
         ob_start();
         $renderable->out($renderable->pagesize, true);
         $output = ob_get_contents();
@@ -86,7 +86,9 @@ class renderer extends \plugin_renderer_base {
         int $perpage = 50, string $download = ''): string {
 
         $html = $this->render_add_button();
+        $html .= \html_writer::start_div('tool-broadcast-table-container', array('id' => 'tool-broadcast-table-container'));
         $html .= $this->render_message_table($courseid, $baseurl, $page, $perpage);
+        $html .= \html_writer::end_div();
 
         return $html;
     }

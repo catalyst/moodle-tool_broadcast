@@ -49,7 +49,7 @@ class broadcast {
         if (!empty($formdata->categories)) {
             $contextid = \context_coursecat::instance($formdata->categories)->id;
         } else if (!empty($formdata->courses)) {
-            $contextid = \context_course::instance($formdata->courses);
+            $contextid = \context_course::instance($formdata->courses)->id;
         } else {
             $contextid = 1;
         }
@@ -59,7 +59,7 @@ class broadcast {
         $record->title = $formdata->title;
         $record->body = $formdata->message['text'];
         $record->bodyformat = $formdata->message['format'];
-        $record->loggedin = $formdata->loggedin;
+        $record->loggedin = (bool)$formdata->loggedin;
         $record->timecreated = time();
         $record->timestart = $formdata->activefrom;
         $record->timeend = $formdata->expiry;
@@ -152,6 +152,13 @@ class broadcast {
         }
 
         return $courses;
+    }
+
+    public function delete_broadcast(int $broadcastid): void {
+        global $DB;
+
+        $DB->delete_records('tool_broadcast', array('id' => $broadcastid));
+        $DB->delete_records('tool_broadcast_users', array('broadcastid' => $broadcastid));
     }
 
 }

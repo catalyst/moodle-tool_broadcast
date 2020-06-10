@@ -28,7 +28,7 @@ define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'cor
     /**
      * Module level variables.
      */
-    var CreateModal = {};
+    var Broadcast = {};
     var contextid;
     var modalObj;
     var spinner = '<p class="text-center">'
@@ -41,13 +41,23 @@ define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'cor
      * @param {Object} formdata
      * @private
      */
-    const updateModalBody = (formdata) => {
+    const updateModalBody = function(formdata, broadcastid, action) {
         if (typeof formdata === "undefined") {
             formdata = {};
         }
 
+        if (typeof broadcastid === "undefined") {
+            broadcastid = 0;
+        }
+
+        if (typeof action === "undefined") {
+            action = '';
+        }
+
         let params = {
                 'jsonformdata': JSON.stringify(formdata),
+                'broadcastid': broadcastid,
+                'action': action
         };
 
         Str.get_string('broadcastdetails', 'tool_broadcast').then((title) => {
@@ -65,7 +75,7 @@ define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'cor
      * @param {Object} e
      * @private
      */
-    const processModalForm = (e) => {
+    const processModalForm = function(e) {
         e.preventDefault(); // Stop modal from closing.
 
         // Form data.
@@ -106,7 +116,7 @@ define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'cor
      *
      * @private
      */
-    const createModal = () => {
+    const createModal = function() {
         Str.get_string('loading', 'tool_broadcast').then((title) => {
             // Create the Modal.
             ModalFactory.create({
@@ -131,19 +141,47 @@ define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'cor
         });
     };
 
-    const displayModalForm = () => {
+    const displayModalForm = function() {
         updateModalBody();
         modalObj.show();
     };
 
-    CreateModal.init = function(context) {
+    const copyBroadcast = function(event) {
+        event.preventDefault();
+        let broadcastid = event.target.parentElement.id.substring(20);
+        updateModalBody({}, broadcastid, 'copy');
+        modalObj.show();
+    };
+
+    const editBroadcast = function(event) {
+        event.preventDefault();
+        let broadcastid = event.target.parentElement.id.substring(20);
+        updateModalBody({}, broadcastid, 'edit');
+        modalObj.show();
+    };
+
+    const tableEventListeners = function() {
+        let edits = document.getElementsByClassName('action-icon edit');
+        let copies = document.getElementsByClassName('action-icon copy');
+
+        for (let i = 0; i < edits.length; i++) {
+            edits[i].addEventListener('click', editBroadcast);
+        }
+
+        for (let i = 0; i < copies.length; i++) {
+            copies[i].addEventListener('click', copyBroadcast);
+        }
+    };
+
+    Broadcast.init = function(context) {
         contextid = context;
         createModal(); // Setup the initial Modal.
+        tableEventListeners(); // Add the event listeners to action buttons in the table.
 
         let createBroadcastButton = document.getElementById('local-broadcast-add-broadcast');
         createBroadcastButton.addEventListener('click', displayModalForm);
 
     };
 
-    return CreateModal;
+    return Broadcast;
 });

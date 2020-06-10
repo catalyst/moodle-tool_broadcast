@@ -77,12 +77,11 @@ class broadcast_table extends table_sql implements renderable {
         $this->define_columns(
             array(
                 'title',
-                'scope',
+                'contextid',
                 'loggedin',
-                'created',
-                'start',
-                'end',
-                'status',
+                'timecreated',
+                'timestart',
+                'timeend',
                 'actions'
             ));
         $this->define_headers(array(
@@ -92,7 +91,6 @@ class broadcast_table extends table_sql implements renderable {
             get_string('report:created', 'tool_broadcast'),
             get_string('report:start', 'tool_broadcast'),
             get_string('report:end', 'tool_broadcast'),
-            get_string('report:status', 'tool_broadcast'),
             get_string('report:actions', 'tool_broadcast'),
         ));
         $this->column_class('created', 'mdl-right');
@@ -102,20 +100,28 @@ class broadcast_table extends table_sql implements renderable {
         // Setup pagination.
         $this->currpage = $page;
         $this->pagesize = $perpage;
-        $this->sortable(true);
+        $this->sortable(true, 'timecreated');
+        $this->column_nosort = array('status', 'actions');
         $this->set_sql(self::FIELDS, '{tool_broadcast}', self::DEFAULT_WHERE);
 
     }
 
     /**
-     * Get content for videostreams column.
-     * We use `videostreams` field for sorting, requires `videostreams` and
-     * `audiostreams` fields.
+     * Get any extra classes names to add to this row in the HTML.
+     * @param $row array the data for this row.
+     * @return string added to the class="" attribute of the tr.
+     */
+    function get_row_class($row) {
+        if (time() > $row->timeend) {
+            return 'dimmed_text';
+        }
+    }
+
+    /**
+     * Get content for title column.
      *
      * @param \stdClass $row
-     *
      * @return string html used to display the video field.
-     *
      * @throws \moodle_exception
      */
     public function col_title($row) {
@@ -127,11 +133,17 @@ class broadcast_table extends table_sql implements renderable {
      * Requires `metadata` field.
      *
      * @param \stdClass $row
-     *
      * @return string html used to display the type field.
      */
-    public function col_scope($row) {
-        return $this->format_text($row->contextid);
+    public function col_contextid($row) {
+
+        $context = \context::instance_by_id($row->contextid);
+        $name = $context->get_context_name();
+        $url = $context->get_url();
+
+        $link = \html_writer::link($url, $name);
+
+        return $this->format_text($link);
     }
 
     /**
@@ -143,7 +155,14 @@ class broadcast_table extends table_sql implements renderable {
      * @return string html used to display the column field.
      */
     public function col_loggedin($row) {
-        return $this->format_text($row->loggedin);
+
+        if ($row->loggedin) {
+            $loggedin = get_string('yes');
+        } else {
+            $loggedin = get_string('no');
+        }
+
+        return $this->format_text($loggedin);
     }
 
 
@@ -155,7 +174,7 @@ class broadcast_table extends table_sql implements renderable {
      *
      * @return string html used to display the column field.
      */
-    public function col_created($row) {
+    public function col_timecreated($row) {
         $date = userdate($row->timecreated, get_string('strftimedatetime', 'langconfig'));
         return $this->format_text($date);
     }
@@ -168,7 +187,7 @@ class broadcast_table extends table_sql implements renderable {
      *
      * @return string html used to display the column field.
      */
-    public function col_start($row) {
+    public function col_timestart($row) {
         $date = userdate($row->timestart, get_string('strftimedatetime', 'langconfig'));
         return $this->format_text($date);
     }
@@ -181,7 +200,7 @@ class broadcast_table extends table_sql implements renderable {
      *
      * @return string html used to display the column field.
      */
-    public function col_end($row) {
+    public function col_timeend($row) {
         $date = userdate($row->timeend, get_string('strftimedatetime', 'langconfig'));
         return $this->format_text($date);
     }
@@ -194,21 +213,23 @@ class broadcast_table extends table_sql implements renderable {
      *
      * @return string html used to display the column field.
      */
-    public function col_status($row) {
-        return $this->format_text('Active');
-    }
-
-    /**
-     * Get content for width column.
-     * We use `width` for sorting purposes, requires `width` and `height` fields.
-     *
-     * @param \stdClass $row
-     *
-     * @return string html used to display the column field.
-     */
     public function col_actions($row) {
-        return $this->format_text('some actions');
+        global $OUTPUT;
+
+        $manage = '';
+
+        $icon = $OUTPUT->render(new \pix_icon('t/edit', get_string('editbroadcast', 'tool_broadcast')));
+        $manage .= \html_writer::link('#', $icon, array('class' => 'action-icon edit', 'id' => 'tool-broadcast-edit-' . $row->id));
+
+        $icon = $OUTPUT->render(new \pix_icon('t/copy', get_string('duplicatebroadcast', 'tool_broadcast')));
+        $manage .= \html_writer::link('#', $icon, array('class' => 'action-icon copy', 'id' => 'tool-broadcast-copy-' . $row->id));
+
+        $deleteurl = new \moodle_url('/admin/tool/broadcast/manage.php', array('broadcastid' => $row->id,
+            'action' => 'delete', 'sesskey' => sesskey()));
+        $icon = $OUTPUT->render(new \pix_icon('t/delete', get_string('deletebroadcast', 'tool_broadcast')));
+        $manage .= \html_writer::link($deleteurl, $icon, array('class' => 'action-icon'));
+
+        return $manage;
     }
 
 }
-

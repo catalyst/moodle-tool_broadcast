@@ -29,8 +29,8 @@ defined('MOODLE_INTERNAL') || die();
 $courseid = optional_param('id', 1, PARAM_INT); // Generic navigation return page switch.
 $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', 50, PARAM_INT);
-
-require_login();
+$action = optional_param('action', '', PARAM_ALPHA);
+$broadcastid = optional_param('broadcastid', 0, PARAM_INT);
 
 $baseurl = $CFG->wwwroot . '/admin/tool/broadcast/manage.php';
 $url = new moodle_url($baseurl, array('id' => $courseid));
@@ -41,13 +41,19 @@ require_login($course, false);
 $context = context_course::instance($course->id);
 require_capability('tool/broadcast:createbroadcasts', $context);
 
+if ($action == 'delete') {
+    $broadcast = new \tool_broadcast\broadcast();
+    $broadcast->delete_broadcast($broadcastid);
+    redirect($url);
+}
+
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('admin');
 $PAGE->set_title(get_string('manage', 'tool_broadcast'));
 $PAGE->set_heading(get_string('manage', 'tool_broadcast'));
 
 // Load the javascript.
-$PAGE->requires->js_call_amd('tool_broadcast/create_modal', 'init', array($context->id));
+$PAGE->requires->js_call_amd('tool_broadcast/broadcast', 'init', array($context->id));
 
 // Build the page output.
 echo $OUTPUT->header();

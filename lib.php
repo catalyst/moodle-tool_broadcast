@@ -31,16 +31,30 @@ defined('MOODLE_INTERNAL') || die();
  * @return string $o Form HTML.
  */
 function tool_broadcast_output_fragment_new_base_form($args): string {
-    $serialiseddata = json_decode($args['jsonformdata'], true);
-    $formdata = [];
-    if (! empty($serialiseddata)) {
-        parse_str($serialiseddata, $formdata);
-    }
 
     $context = $args['context'];
     require_capability('tool/broadcast:createbroadcasts', $context);
+    $contextid = $context->id;
 
-    $mform = new \tool_broadcast\output\create_form(null, array('contextid' => $context->id),
+    if (!empty($args['action'])) {
+        $broadcast = new \tool_broadcast\broadcast();
+        $formdata = $broadcast->get_broadcast_formdata($args['broadcastid']);
+        $action = $args['action'];
+        $contextid = (int)$formdata['contextid'];
+        $broadcastid = $args['broadcastid'];
+    } else {
+        $serialiseddata = json_decode($args['jsonformdata'], true);
+        $formdata = [];
+        $action = '';
+        $broadcastid = 0;
+    }
+
+    if (!empty($serialiseddata)) {
+        parse_str($serialiseddata, $formdata);
+    }
+
+    $customdata = array('contextid' => $contextid, 'action' => $action, 'broadcastid' => $broadcastid);
+    $mform = new \tool_broadcast\output\create_form(null, $customdata,
         'post', '', array('class' => 'ignoredirty'), true, $formdata);
 
     if (! empty($serialiseddata)) {

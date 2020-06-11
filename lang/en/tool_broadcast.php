@@ -37,6 +37,7 @@ $string['courses_help'] = 'Select the course for the message. The messge will be
 $string['createbroadcastdesc'] = 'Create a new broadcast message.';
 $string['createbroadcastfail'] = 'Broadcast message creation failed';
 $string['createbtn'] = 'Create broadcast';
+$string['updatebtn'] = 'Update broadcast';
 $string['broadcast:createbroadcasts'] = 'Can create broadcast messages';
 $string['broadcast:viewbroadcasts'] = 'Can view broadcast messages';
 $string['broadcastdetails'] = 'Enter broadcast details';

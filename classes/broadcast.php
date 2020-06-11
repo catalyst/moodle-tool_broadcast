@@ -69,6 +69,90 @@ class broadcast {
         return $insertid;
     }
 
+    /**
+     * Create a broadcast message record in the database.
+     *
+     * @param \stdClass $formdata The data from the broadcast create form to save in the database.
+     * @return int $insertid The record ID from the newly created broadcast message record.
+     */
+    public function update_broadcast(\stdClass $formdata): void {
+        global $DB;
+
+        if (!empty($formdata->categories)) {
+            $contextid = \context_coursecat::instance($formdata->categories)->id;
+        } else if (!empty($formdata->courses)) {
+            $contextid = \context_course::instance($formdata->courses)->id;
+        } else {
+            $contextid = 1;
+        }
+
+        $record = new \stdClass();
+        $record->id = $formdata->broadcastid;
+        $record->contextid = $contextid;
+        $record->title = $formdata->title;
+        $record->body = $formdata->message['text'];
+        $record->bodyformat = $formdata->message['format'];
+        $record->loggedin = (bool)$formdata->loggedin;
+        $record->timecreated = time();
+        $record->timestart = $formdata->activefrom;
+        $record->timeend = $formdata->expiry;
+
+        $DB->update_record('tool_broadcast', $record);
+
+    }
+
+    public function delete_broadcast(int $broadcastid): void {
+        global $DB;
+
+        $DB->delete_records('tool_broadcast', array('id' => $broadcastid));
+        $DB->delete_records('tool_broadcast_users', array('broadcastid' => $broadcastid));
+    }
+
+    public function get_broadcast_formdata(int $broadcastid): array {
+        global $DB;
+
+        $broadcast = $DB->get_record('tool_broadcast', array('id' => $broadcastid), '*', MUST_EXIST);
+        $context = \context::instance_by_id($broadcast->contextid);
+
+        $formdata = array (
+            'contextid' => $broadcast->contextid,
+            'sesskey' => sesskey(),
+            '_qf__tool_broadcast_output_create_form' => 1,
+            'title' => $broadcast->title,
+            'message' => array(
+                'text' => $broadcast->body,
+                'format' => $broadcast->bodyformat
+            ),
+            'activefrom ' => array(
+                'day' => date('d', $broadcast->timestart),
+                'month' => date('n', $broadcast->timestart),
+                'year' => date('Y', $broadcast->timestart),
+                'hour' => date('h', $broadcast->timestart),
+                'minute' => date('i', $broadcast->timestart)
+            ),
+            'expiry' => array(
+                'day' => date('d', $broadcast->timeend),
+                'month' => date('n', $broadcast->timeend),
+                'year' => date('Y', $broadcast->timeend),
+                'hour' => date('H', $broadcast->timeend),
+                'minute' => date('i', $broadcast->timeend)
+            ),
+            'loggedin' => 1
+        );
+
+        if ($context->contextlevel == CONTEXT_COURSECAT) {
+            $formdata['scopesite'] = 1;
+            $formdata['categories'] = $context->instanceid;
+        } else if ($context->contextlevel == CONTEXT_COURSE) {
+            $formdata['scopesite'] = 2;
+            $formdata['courses'] = $context->instanceid;
+        } else {
+            $formdata['scopesite'] = 0;
+        }
+
+        return $formdata;
+    }
+
     public function get_broadcasts(int $contextid, int $userid): array {
         global $DB;
 
@@ -153,12 +237,4 @@ class broadcast {
 
         return $courses;
     }
-
-    public function delete_broadcast(int $broadcastid): void {
-        global $DB;
-
-        $DB->delete_records('tool_broadcast', array('id' => $broadcastid));
-        $DB->delete_records('tool_broadcast_users', array('broadcastid' => $broadcastid));
-    }
-
 }

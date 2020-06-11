@@ -64,10 +64,32 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
         // Mock up the form data for use in tests.
         $formdata = new \stdClass;
         $formdata->contextid = $context->id;
+        $formdata->action = '';
+        $formdata->broadcastid = 0;
         $formdata->sesskey = $sesskey;
         $formdata->_qf__tool_broadcast_output_create_form = 1;
         $formdata->title = 'foo';
-        $formdata->message = 'bar';
+        $formdata->message = array(
+            'text' => '<p dir="ltr" style="text-align: left;">one <strong>two </strong>threee<br></p>',
+            'format' => 1
+        );
+        $formdata->scopesite = 2;
+        $formdata->courses = $course->id;
+        $formdata->activefrom = array(
+            'day' => 11,
+            'month' => 6,
+            'year' => 2020,
+            'hour' => 12,
+            'minute' => 32
+        );
+        $formdata->expiry = array(
+            'day' => 11,
+            'month' => 6,
+            'year' => 2020,
+            'hour' => 13,
+            'minute' => 32
+        );
+        $formdata->loggedin = 1;
 
         $urlform = http_build_query($formdata, '', '&'); // Take the form data and url encode it.
         $jsonformdata = json_encode($urlform); // Take form string and JSON encode.
@@ -80,7 +102,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
         $record = $DB->get_record('tool_broadcast', array('id' => $response));
 
         $this->assertEquals($formdata->title, $record->title);
-        $this->assertEquals($formdata->message, $record->body);
+        $this->assertEquals($formdata->message['text'], $record->body);
 
     }
 
@@ -111,8 +133,18 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
         // Mock up the form data for use in tests.
         $formdata = new \stdClass;
         $formdata->contextid = $contextcourse->id;
+        $formdata->action = '';
+        $formdata->broadcastid = 0;
         $formdata->title = 'foo';
-        $formdata->message = 'bar';
+        $formdata->message = array(
+            'text' => '<p dir="ltr" style="text-align: left;">one <strong>two </strong>threee<br></p>',
+            'format' => 1
+        );
+        $formdata->scopesite = 2;
+        $formdata->courses = $course->id;
+        $formdata->activefrom = 1591842960;
+        $formdata->expiry = 1591846560;
+        $formdata->loggedin = 1;
 
         // Create the broadcast
         $broadcast = new \tool_broadcast\broadcast();
@@ -124,7 +156,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
         $response = json_decode($returnjson, true);
 
         $this->assertEquals($formdata->title, $response[$broadcastid]['title']);
-        $this->assertEquals($formdata->message, $response[$broadcastid]['body']);
+        $this->assertEquals($formdata->message['text'], $response[$broadcastid]['body']);
 
     }
 
@@ -155,8 +187,18 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
         // Mock up the form data for use in tests.
         $formdata = new \stdClass;
         $formdata->contextid = $contextcourse->id;
+        $formdata->action = '';
+        $formdata->broadcastid = 0;
         $formdata->title = 'foo';
-        $formdata->message = 'bar';
+        $formdata->message = array(
+            'text' => '<p dir="ltr" style="text-align: left;">one <strong>two </strong>threee<br></p>',
+            'format' => 1
+        );
+        $formdata->scopesite = 2;
+        $formdata->courses = $course->id;
+        $formdata->activefrom = 1591842960;
+        $formdata->expiry = 1591846560;
+        $formdata->loggedin = 1;
 
         // Create the broadcast
         $broadcast = new \tool_broadcast\broadcast();
@@ -198,7 +240,17 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
         $formdata = new \stdClass;
         $formdata->contextid = $contextcourse->id;
         $formdata->title = 'foo';
-        $formdata->message = 'bar';
+        $formdata->action = '';
+        $formdata->broadcastid = 0;
+        $formdata->message = array(
+            'text' => '<p dir="ltr" style="text-align: left;">one <strong>two </strong>threee<br></p>',
+            'format' => 1
+        );
+        $formdata->scopesite = 2;
+        $formdata->courses = $course->id;
+        $formdata->activefrom = 1591842960;
+        $formdata->expiry = 1591846560;
+        $formdata->loggedin = 1;
 
         // Create the broadcast
         $broadcast = new \tool_broadcast\broadcast();

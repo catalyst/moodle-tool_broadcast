@@ -1,5 +1,4 @@
 <?php
-use repository_contentbank\browser\contentbank_browser_context_course;
 
 // This file is part of Moodle - http://moodle.org/
 //
@@ -57,7 +56,15 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $formdata = new \stdClass;
         $formdata->contextid = $context->id;
         $formdata->title = 'foo';
-        $formdata->message = 'bar';
+        $formdata->message = array(
+            'text' => '<p dir="ltr" style="text-align: left;">one <strong>two </strong>threee<br></p>',
+            'format' => 1
+        );
+        $formdata->scopesite = 2;
+        $formdata->courses = $course->id;
+        $formdata->activefrom = 1591842960;
+        $formdata->expiry = 1591846560;
+        $formdata->loggedin = 1;
 
         $broadcast = new \tool_broadcast\broadcast();
         $result = $broadcast->create_broadcast($formdata);
@@ -65,7 +72,57 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $record = $DB->get_record('tool_broadcast', array('id' => $result));
 
         $this->assertEquals($formdata->title, $record->title);
-        $this->assertEquals($formdata->message, $record->body);
+        $this->assertEquals($formdata->message['text'], $record->body);
+    }
+
+    /**
+     * Test broadcast message record updating.
+     */
+    public function test_update_broadcast() {
+        global $DB;
+
+        $this->setAdminUser();
+
+        $course = get_site();
+        $context = context_course::instance($course->id);
+
+        // Mock up the form data for use in tests.
+        $formdata = new \stdClass;
+        $formdata->contextid = $context->id;
+        $formdata->title = 'foo';
+        $formdata->message = array(
+            'text' => '<p dir="ltr" style="text-align: left;">one <strong>two </strong>threee<br></p>',
+            'format' => 1
+        );
+        $formdata->scopesite = 2;
+        $formdata->courses = $course->id;
+        $formdata->activefrom = 1591842960;
+        $formdata->expiry = 1591846560;
+        $formdata->loggedin = 1;
+
+        $broadcast = new \tool_broadcast\broadcast();
+        $result = $broadcast->create_broadcast($formdata);
+
+        $record = $DB->get_record('tool_broadcast', array('id' => $result));
+
+        $this->assertEquals($formdata->title, $record->title);
+        $this->assertEquals($formdata->message['text'], $record->body);
+
+        $formdata->broadcastid = $result;
+        $formdata->title = 'bar';
+        $formdata->message = array(
+            'text' => '<p dir="ltr" style="text-align: left;">one <strong>four </strong>threee<br></p>',
+            'format' => 1
+        );
+
+        $broadcast->update_broadcast($formdata);
+
+        $record = $DB->get_record('tool_broadcast', array('id' => $result));
+
+        $this->assertEquals($formdata->title, $record->title);
+        $this->assertEquals($formdata->message['text'], $record->body);
+
+
     }
 
     /**
@@ -95,7 +152,15 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $formdata = new \stdClass;
         $formdata->contextid = $contextcourse->id;
         $formdata->title = 'foo';
-        $formdata->message = 'bar';
+        $formdata->message = array(
+            'text' => '<p dir="ltr" style="text-align: left;">one <strong>two </strong>threee<br></p>',
+            'format' => 1
+        );
+        $formdata->scopesite = 2;
+        $formdata->courses = $course->id;
+        $formdata->activefrom = 1591842960;
+        $formdata->expiry = 1591846560;
+        $formdata->loggedin = 1;
 
         // Create the broadcast
         $broadcast = new \tool_broadcast\broadcast();
@@ -104,7 +169,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $broadcasts = $broadcast->get_broadcasts($contextassignid, $user->id);
 
         $this->assertEquals($formdata->title, $broadcasts[$broadcastid]->title);
-        $this->assertEquals($formdata->message, $broadcasts[$broadcastid]->body);
+        $this->assertEquals($formdata->message['text'], $broadcasts[$broadcastid]->body);
 
     }
 
@@ -135,7 +200,15 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $formdata = new \stdClass;
         $formdata->contextid = $contextcourse->id;
         $formdata->title = 'foo';
-        $formdata->message = 'bar';
+        $formdata->message = array(
+            'text' => '<p dir="ltr" style="text-align: left;">one <strong>two </strong>threee<br></p>',
+            'format' => 1
+        );
+        $formdata->scopesite = 2;
+        $formdata->courses = $course->id;
+        $formdata->activefrom = 1591842960;
+        $formdata->expiry = 1591846560;
+        $formdata->loggedin = 1;
 
         // Create the broadcast
         $broadcast = new \tool_broadcast\broadcast();
@@ -177,7 +250,15 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $formdata = new \stdClass;
         $formdata->contextid = $contextcourse->id;
         $formdata->title = 'foo';
-        $formdata->message = 'bar';
+        $formdata->message = array(
+            'text' => '<p dir="ltr" style="text-align: left;">one <strong>two </strong>threee<br></p>',
+            'format' => 1
+        );
+        $formdata->scopesite = 2;
+        $formdata->courses = $course->id;
+        $formdata->activefrom = 1591842960;
+        $formdata->expiry = 1591846560;
+        $formdata->loggedin = 1;
 
         // Create the broadcast
         $broadcast = new \tool_broadcast\broadcast();
@@ -186,7 +267,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $broadcasts = $broadcast->get_broadcasts($contextassignid, $user->id);
 
         $this->assertEquals($formdata->title, $broadcasts[$broadcastid]->title);
-        $this->assertEquals($formdata->message, $broadcasts[$broadcastid]->body);
+        $this->assertEquals($formdata->message['text'], $broadcasts[$broadcastid]->body);
 
         // Acknowledge message.
         $broadcast->acknowledge_broadcast($broadcastid, $contextassignid, $user->id);
@@ -194,5 +275,53 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $broadcasts = $broadcast->check_broadcasts($contextassignid, $user->id);
         $this->assertFalse($broadcasts);
 
+    }
+
+    /**
+     * Test getting broadcast as formdata.
+     */
+    public function test_get_broadcast_formdata() {
+
+        // Create a course with activity.
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $assignrow = $generator->create_module('assign', array(
+            'course' => $course->id,
+            'duedate' => 1585359375
+        ));
+
+        $assign = new assign(context_module::instance($assignrow->cmid), false, false);
+        $user = $generator->create_user();
+        $user->lastlogin = time() - 1000;
+
+        // Enrol user into the course.
+        $generator->enrol_user($user->id, $course->id, 'student');
+
+        $contextcourse = context_course::instance($course->id);
+        $assign->get_context()->id;
+
+        // Mock up the form data for use in tests.
+        $formdata = new \stdClass;
+        $formdata->contextid = $contextcourse->id;
+        $formdata->title = 'foo';
+        $formdata->message = array(
+            'text' => '<p dir="ltr" style="text-align: left;">one <strong>two </strong>threee<br></p>',
+            'format' => 1
+        );
+        $formdata->scopesite = 2;
+        $formdata->courses = $course->id;
+        $formdata->activefrom = 1591842960;
+        $formdata->expiry = 1591846560;
+        $formdata->loggedin = 1;
+
+        // Create the broadcast
+        $broadcast = new \tool_broadcast\broadcast();
+        $broadcastid = $broadcast->create_broadcast($formdata);
+
+        $broadcast = $broadcast->get_broadcast_formdata($broadcastid);
+
+        $this->assertEquals($formdata->title, $broadcast['title']);
+        $this->assertEquals($formdata->message['text'], $broadcast['message']['text']);
+        $this->assertEquals($course->id, $broadcast['courses']);
     }
 }

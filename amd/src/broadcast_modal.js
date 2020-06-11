@@ -119,6 +119,7 @@ define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'cor
                 footerBtn.type = 'button';
                 footerBtn.value = 'Acknowledge';
                 footerBtn.id = 'tool-broadcast-accept-broadcast';
+                footerBtn.classList.add('btn', 'btn-primary', 'd-flex', 'ml-auto', 'mr-auto');
 
                 ModalFactory.create({
                     type: ModalFactory.types.DEFAULT,

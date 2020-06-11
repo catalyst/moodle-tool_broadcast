@@ -48,9 +48,29 @@ class create_form extends \moodleform {
         $mform = $this->_form;
         $contextid = $this->_customdata['contextid'];
 
+        if (!empty($this->_customdata['action'])) {
+            $action = $this->_customdata['action'];
+        } else {
+            $action = '';
+        }
+
+        if (!empty($this->_customdata['broadcastid'])) {
+            $broadcastid = $this->_customdata['broadcastid'];
+        } else {
+            $broadcastid = 0;
+        }
+
         // Context ID.
         $mform->addElement('hidden', 'contextid', $contextid);
         $mform->setType('contextid', PARAM_INT);
+
+        // Action.
+        $mform->addElement('hidden', 'action', $action);
+        $mform->setType('action', PARAM_ALPHA);
+
+        // Broadcast ID.
+        $mform->addElement('hidden', 'broadcastid', $broadcastid);
+        $mform->setType('broadcastid', PARAM_INT);
 
         // Form heading.
         $mform->addElement('html', \html_writer::div(get_string('createbroadcastdesc', 'tool_broadcast'), 'form-description mb-3'));
@@ -131,7 +151,12 @@ class create_form extends \moodleform {
         $mform->addHelpButton('loggedin', 'loggedin', 'tool_broadcast');
 
         // Action buttons.
-        $this->add_action_buttons(true, get_string('createbtn', 'tool_broadcast'));
+        if ($action == 'edit') {
+            $btnstring = get_string('updatebtn', 'tool_broadcast');
+        } else {
+            $btnstring = get_string('createbtn', 'tool_broadcast');
+        }
+        $this->add_action_buttons(true, $btnstring);
 
     }
 }

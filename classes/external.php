@@ -82,7 +82,14 @@ class tool_broadcast_external extends external_api {
 
         if ($mdata) {
             $broadcast = new \tool_broadcast\broadcast();
-            $result = $broadcast->create_broadcast($mdata);
+
+            if (!empty($mdata->action) && $mdata->action == 'edit') {
+                $broadcast->update_broadcast($mdata);
+                $result = $mdata->broadcastid;
+            } else {
+                $result = $broadcast->create_broadcast($mdata);
+            }
+
         } else {
             throw new moodle_exception('createbroadcastfail', 'tool_broadcast');
         }

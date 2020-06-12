@@ -66,8 +66,7 @@ class broadcast_table extends table_sql implements renderable {
      *
      * @throws \coding_exception
      */
-    public function __construct(string $uniqueid, string $baseurl, int $page = 0,
-                                int $perpage = 50) {
+    public function __construct(string $uniqueid, string $baseurl, int $page = 0) {
         parent::__construct($uniqueid);
 
         $this->set_attribute('id', 'tool_broadcast_broadcast_table');
@@ -99,8 +98,7 @@ class broadcast_table extends table_sql implements renderable {
 
         // Setup pagination.
         $this->currpage = $page;
-        $this->pagesize = $perpage;
-        $this->sortable(true, 'timecreated');
+        $this->sortable(true, 'timecreated', SORT_DESC);
         $this->column_nosort = array('status', 'actions');
         $this->set_sql(self::FIELDS, '{tool_broadcast}', self::DEFAULT_WHERE);
 
@@ -114,6 +112,8 @@ class broadcast_table extends table_sql implements renderable {
     function get_row_class($row) {
         if (time() > $row->timeend) {
             return 'dimmed_text';
+        } else {
+            return 'font-weight-bold';
         }
     }
 

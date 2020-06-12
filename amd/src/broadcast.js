@@ -23,7 +23,7 @@
  */
 
 define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'core/fragment', 'core/notification'],
-        function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
+function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
 
     /**
      * Module level variables.
@@ -34,6 +34,27 @@ define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'cor
     var spinner = '<p class="text-center">'
         + '<i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>'
         + '</p>';
+
+    /**
+     * Update the broadcast overview table with latest data.
+     */
+    const updateBroadcastTable = function() {
+        let tableContainer = document.getElementById('tool-broadcast-table-container');
+        let loader = tableContainer.getElementsByClassName('overlay-icon-container')[0];
+        let tableElement = document.getElementById('tool-broadcast-table');
+
+        loader.classList.remove('hide'); // Show loader if not already shown.
+
+        Fragment.loadFragment('tool_broadcast', 'table', contextid)
+        .done((response) => {
+            tableElement.innerHTML = response;
+            loader.classList.add('hide');
+            tableEventListeners(); // Re-add table event listeners.
+
+        }).fail(() => {
+            Notification.exception(new Error('Failed to update table.'));
+        });
+    };
 
     /**
      * Updates the body of the modal window.
@@ -104,6 +125,7 @@ define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'cor
             // For submission succeeded.
             modalObj.setBody(spinner);
             modalObj.hide();
+            updateBroadcastTable();
         }).fail(() => {
             // Form submission failed server side, redisplay with errors.
             updateModalBody(copyform);

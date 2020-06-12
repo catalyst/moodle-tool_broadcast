@@ -71,6 +71,28 @@ function tool_broadcast_output_fragment_new_base_form($args): string {
 }
 
 /**
+ * Renders the broadcast table on the broadcast management screen.
+ * We update the table via ajax, when a broadcast is created or changed.
+ *
+ * @param array $args
+ * @return string $o Form HTML.
+ */
+function tool_broadcast_output_fragment_table($args): string {
+    global $CFG, $PAGE;
+
+    $context = $args['context'];
+    require_capability('tool/broadcast:createbroadcasts', $context);
+
+    $baseurl = $CFG->wwwroot . '/admin/tool/broadcast/manage.php';
+    $output = $PAGE->get_renderer('tool_broadcast');
+
+    $o = $output->render_message_table($baseurl, 0);
+
+    return $o;
+}
+
+
+/**
  * Adds required JS and startup values for broadcast Modals.
  */
 function tool_broadcast_before_footer(): void {

@@ -28,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $courseid = optional_param('id', 1, PARAM_INT); // Generic navigation return page switch.
 $page = optional_param('page', 0, PARAM_INT);
-$perpage = optional_param('perpage', 50, PARAM_INT);
 $action = optional_param('action', '', PARAM_ALPHA);
 $broadcastid = optional_param('broadcastid', 0, PARAM_INT);
 
@@ -58,6 +57,6 @@ $PAGE->requires->js_call_amd('tool_broadcast/broadcast', 'init', array($context-
 // Build the page output.
 echo $OUTPUT->header();
 $output = $PAGE->get_renderer('tool_broadcast');
-echo $output->render_content($courseid, $baseurl, $page, $perpage);
+echo $output->render_content($baseurl, $page);
 
 echo $OUTPUT->footer();

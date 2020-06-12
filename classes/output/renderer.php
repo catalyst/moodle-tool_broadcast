@@ -47,11 +47,11 @@ class renderer extends \plugin_renderer_base {
      * @throws \coding_exception
      * @throws \moodle_exception
      */
-    private function render_message_table(int $courseid, string $baseurl, int $page = 0, int $perpage = 50) {
-        $url = new \moodle_url($baseurl, array('id' => $courseid));
-        $renderable = new broadcast_table('tool_broadcast', $baseurl, $perpage, $page);
+    public function render_message_table(string $baseurl, int $page = 0) {
+        $renderable = new broadcast_table('tool_broadcast', $baseurl, $page);
+        $perpage = 50;
         ob_start();
-        $renderable->out($renderable->pagesize, true);
+        $renderable->out($perpage, true);
         $output = ob_get_contents();
         ob_end_clean();
 
@@ -73,6 +73,12 @@ class renderer extends \plugin_renderer_base {
         return $button;
     }
 
+    private function get_loader(bool $hidden): string {
+        $context = array('hidden' => $hidden);
+
+        return $this->render_from_template('tool_broadcast/loader', $context);
+    }
+
     /**
      *
      * @param int $courseid
@@ -82,12 +88,14 @@ class renderer extends \plugin_renderer_base {
      * @param string $download
      * @return string
      */
-    public function render_content(int $courseid, string $baseurl, int $page = 0,
-        int $perpage = 50, string $download = ''): string {
+    public function render_content(string $baseurl, int $page = 0): string {
 
         $html = $this->render_add_button();
         $html .= \html_writer::start_div('tool-broadcast-table-container', array('id' => 'tool-broadcast-table-container'));
-        $html .= $this->render_message_table($courseid, $baseurl, $page, $perpage);
+        $html .= $this->get_loader(true);
+        $html .= \html_writer::start_div('tool-broadcast-table', array('id' => 'tool-broadcast-table'));
+        $html .= $this->render_message_table($baseurl, $page);
+        $html .= \html_writer::end_div();
         $html .= \html_writer::end_div();
 
         return $html;

@@ -23,7 +23,7 @@
  */
 
 define(['core/str', 'core/modal_factory', 'core/modal_events', 'core/ajax', 'core/notification'],
-        function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
+function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
 
     /**
      * Module level variables.

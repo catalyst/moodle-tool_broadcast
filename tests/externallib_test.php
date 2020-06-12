@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -31,7 +30,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 /**
  * Tool Broadcast webservice tests.
  *
- * @package    core_backup
+ * @package    tool_broadcast
  * @copyright  2020 Matt Porritt <mattp@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -146,7 +145,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
         $formdata->expiry = 1591846560;
         $formdata->loggedin = 1;
 
-        // Create the broadcast
+        // Create the broadcast.
         $broadcast = new \tool_broadcast\broadcast();
         $broadcastid = $broadcast->create_broadcast($formdata);
 
@@ -200,7 +199,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
         $formdata->expiry = 1591846560;
         $formdata->loggedin = 1;
 
-        // Create the broadcast
+        // Create the broadcast.
         $broadcast = new \tool_broadcast\broadcast();
         $broadcastid = $broadcast->create_broadcast($formdata);
 
@@ -252,7 +251,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
         $formdata->expiry = 1591846560;
         $formdata->loggedin = 1;
 
-        // Create the broadcast
+        // Create the broadcast.
         $broadcast = new \tool_broadcast\broadcast();
         $broadcastid = $broadcast->create_broadcast($formdata);
 

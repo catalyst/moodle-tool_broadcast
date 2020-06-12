@@ -40,7 +40,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
      * Get broadcast messages for this user.
      * This is only called if the check messages method returns true.
      */
-    const getMessages = () => {
+    const getMessages = function() {
         Ajax.call([{
             methodname: 'tool_broadcast_get_broadcasts',
             args: {contextid: contextid}
@@ -60,7 +60,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
      * This is done as a discrete ajax call, so we don't update the user session
      * everytime we poll, and prevent the user from being logged out due to inactivity.
      */
-    const checkMessages = () => {
+    const checkMessages = function() {
         Ajax.call([{
             methodname: 'tool_broadcast_check_broadcasts',
             args: {contextid: contextid}
@@ -75,7 +75,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
 
     };
 
-    const displayMessages = () => {
+    const displayMessages = function() {
         // If modal window is not currently displayed, check for queue messages.
         if (!modalObj.getRoot()[0].classList.contains('show')) {
             for (const message in messageQueue) {
@@ -85,7 +85,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
                 modalObj.footer[0].dataset.id = messageQueue[message].id;
                 modalObj.show();
 
-                // remove the message from the queue
+                // Remove the message from the queue.
                 delete messageQueue[message];
 
                 // Exit the loop after showing one message.
@@ -94,7 +94,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
         }
     };
 
-    const acceptMessage = () => {
+    const acceptMessage = function() {
         modalObj.setBody(spinner);
         let broadcastid = modalObj.footer[0].dataset.id;
 
@@ -111,7 +111,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
      *
      * @private
      */
-    const createModal = () => {
+    const createModal = function() {
         return new Promise((resolve, reject) => {
             Str.get_string('loading', 'tool_broadcast').then((title) => {
                 // Create the Modal.

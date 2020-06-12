@@ -24,9 +24,9 @@
 
 namespace tool_broadcast\output;
 
-require_once($CFG->libdir . '/tablelib.php');
-
 defined('MOODLE_INTERNAL') || die;
+
+require_once($CFG->libdir . '/tablelib.php');
 
 use \table_sql;
 use \renderable;
@@ -61,8 +61,6 @@ class broadcast_table extends table_sql implements renderable {
      * @param string $uniqueid Unique id of table.
      * @param string $baseurl the base url to render this report on.
      * @param int $page the page number for pagination.
-     * @param int $perpage amount of records per page for pagination.
-     * @param string $download dataformat type. One of csv, xhtml, ods, etc
      *
      * @throws \coding_exception
      */
@@ -106,10 +104,11 @@ class broadcast_table extends table_sql implements renderable {
 
     /**
      * Get any extra classes names to add to this row in the HTML.
-     * @param $row array the data for this row.
+     *
+     * @param array $row the data for this row.
      * @return string added to the class="" attribute of the tr.
      */
-    function get_row_class($row) {
+    public function get_row_class($row) {
         if (time() > $row->timeend) {
             return 'dimmed_text';
         } else {

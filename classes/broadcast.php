@@ -101,6 +101,11 @@ class broadcast {
 
     }
 
+    /**
+     * Delete a broadcast from the database.
+     *
+     * @param int $broadcastid The ID of the broadcast to delete.
+     */
     public function delete_broadcast(int $broadcastid): void {
         global $DB;
 
@@ -108,6 +113,12 @@ class broadcast {
         $DB->delete_records('tool_broadcast_users', array('broadcastid' => $broadcastid));
     }
 
+    /**
+     * Get the an exisitng broadcast in a format that can be fed back into the create form.
+     *
+     * @param int $broadcastid The ID of the broadcast to delete.
+     * @return array $formdata The broadcast form data.
+     */
     public function get_broadcast_formdata(int $broadcastid): array {
         global $DB;
 
@@ -153,6 +164,13 @@ class broadcast {
         return $formdata;
     }
 
+    /**
+     * Get a list of broadcasts.
+     *
+     * @param int $contextid The context ID to get broadcasts for.
+     * @param int $userid The user ID that the broadcasts relate to.
+     * @return array $records The broadcast records.
+     */
     public function get_broadcasts(int $contextid, int $userid): array {
         global $DB;
 
@@ -176,6 +194,13 @@ class broadcast {
         return $records;
     }
 
+    /**
+     * Check if there are any broadcasts applicable.
+     *
+     * @param int $contextid The context ID to get broadcasts for.
+     * @param int $userid The user ID that the broadcasts relate to.
+     * @return bool
+     */
     public function check_broadcasts(int $contextid, int $userid): bool {
         global $DB;
 
@@ -199,6 +224,13 @@ class broadcast {
         return $exists;
     }
 
+    /**
+     * Process user acknowledgement of the broadcast.
+     *
+     * @param int $broadcastid The broadcast ID to acknowledge.
+     * @param int $contextid The context ID to get broadcasts for.
+     * @param int $userid The user ID that the broadcasts relate to.
+     */
     public function acknowledge_broadcast(int $broadcastid, int $contextid, int $userid): void {
         global $DB;
 
@@ -219,6 +251,11 @@ class broadcast {
         }
     }
 
+    /**
+     * Helper method to get a list of courses that the user can create a broadcast in.
+     *
+     * @return array $courses The list of courses.
+     */
     public function get_courses(): array {
 
         $courses = array();

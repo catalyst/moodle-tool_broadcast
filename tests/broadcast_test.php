@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Tool Broadcast class tests.
  *
- * @package    core_backup
+ * @package    tool_broadcast
  * @copyright  2020 Matt Porritt <mattp@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -121,8 +120,6 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
 
         $this->assertEquals($formdata->title, $record->title);
         $this->assertEquals($formdata->message['text'], $record->body);
-
-
     }
 
     /**
@@ -162,7 +159,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $formdata->expiry = 1591846560;
         $formdata->loggedin = 1;
 
-        // Create the broadcast
+        // Create the broadcast.
         $broadcast = new \tool_broadcast\broadcast();
         $broadcastid = $broadcast->create_broadcast($formdata);
 
@@ -210,7 +207,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $formdata->expiry = 1591846560;
         $formdata->loggedin = 1;
 
-        // Create the broadcast
+        // Create the broadcast.
         $broadcast = new \tool_broadcast\broadcast();
 
         $broadcasts = $broadcast->check_broadcasts($contextassignid, $user->id);
@@ -260,7 +257,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $formdata->expiry = 1591846560;
         $formdata->loggedin = 1;
 
-        // Create the broadcast
+        // Create the broadcast.
         $broadcast = new \tool_broadcast\broadcast();
         $broadcastid = $broadcast->create_broadcast($formdata);
 
@@ -314,7 +311,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $formdata->expiry = 1591846560;
         $formdata->loggedin = 1;
 
-        // Create the broadcast
+        // Create the broadcast.
         $broadcast = new \tool_broadcast\broadcast();
         $broadcastid = $broadcast->create_broadcast($formdata);
 

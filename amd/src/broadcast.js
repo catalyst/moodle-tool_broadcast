@@ -76,16 +76,16 @@ function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
         }
 
         let params = {
-                'jsonformdata': JSON.stringify(formdata),
-                'broadcastid': broadcastid,
-                'action': action
+            'jsonformdata': JSON.stringify(formdata),
+            'broadcastid': broadcastid,
+            'action': action
         };
 
         Str.get_string('broadcastdetails', 'tool_broadcast').then((title) => {
             modalObj.setTitle(title);
             modalObj.setBody(Fragment.loadFragment('tool_broadcast', 'new_base_form', contextid, params));
             return;
-        }).catch(() =>{
+        }).catch(() => {
             Notification.exception(new Error('Failed to load string: broadcastdetails'));
         });
     };

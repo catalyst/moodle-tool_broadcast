@@ -83,13 +83,13 @@ class create_form extends \moodleform {
 
         // Broadcast message body.
         $bodyoptions = array(
-            'subdirs'=>0,
-            'maxbytes'=>0,
-            'maxfiles'=>0,
-            'changeformat'=>0,
-            'context'=>null,
-            'noclean'=>0,
-            'trusttext'=>0,
+            'subdirs' => 0,
+            'maxbytes' => 0,
+            'maxfiles' => 0,
+            'changeformat' => 0,
+            'context' => null,
+            'noclean' => 0,
+            'trusttext' => 0,
             'enable_filemanagement' => false,
             'autosave' => false);
         $bodysize = array('rows' => 5, 'cols' => 30);
@@ -111,7 +111,7 @@ class create_form extends \moodleform {
 
         $categoryoptions = array(
             'multiple' => false,
-            'placeholder' =>  get_string('findcategory', 'tool_broadcast'),
+            'placeholder' => get_string('findcategory', 'tool_broadcast'),
             'noselectionstring' => get_string('findcategory', 'tool_broadcast'),
         );
         $mform->addElement('autocomplete', 'categories', get_string('categories', 'tool_broadcast'), $categories, $categoryoptions);
@@ -122,7 +122,7 @@ class create_form extends \moodleform {
 
         $courseoptions = array(
             'multiple' => false,
-            'placeholder' =>  get_string('findcourse', 'tool_broadcast'),
+            'placeholder' => get_string('findcourse', 'tool_broadcast'),
             'noselectionstring' => get_string('findcourse', 'tool_broadcast'),
         );
         $mform->addElement('autocomplete', 'courses', get_string('courses', 'tool_broadcast'), $courses, $courseoptions);

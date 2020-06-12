@@ -36,16 +36,12 @@ defined('MOODLE_INTERNAL') || die;
 class renderer extends \plugin_renderer_base {
 
     /**
-     * Render the html for the message management table.
+     * Render the HTML for the message management table.
      *
      * @param string $baseurl the base url to render the table on.
      * @param int $page the page number for pagination.
-     * @param int $perpage amount of records per page for pagination.
-     * @param string $download dataformat type. One of csv, xhtml, ods, etc
      *
-     * @return string $output html for display
-     * @throws \coding_exception
-     * @throws \moodle_exception
+     * @return string $output HTML for the table.
      */
     public function render_message_table(string $baseurl, int $page = 0) {
         $renderable = new broadcast_table('tool_broadcast', $baseurl, $page);
@@ -73,26 +69,28 @@ class renderer extends \plugin_renderer_base {
         return $button;
     }
 
-    private function get_loader(bool $hidden): string {
-        $context = array('hidden' => $hidden);
+    /**
+     * Render the HTML for the loading spinner.
+     *
+     * @return string The rendered HTML.
+     */
+    private function get_loader(): string {
 
         return $this->render_from_template('tool_broadcast/loader', $context);
     }
 
     /**
+     * Main method that renders page content.
      *
-     * @param int $courseid
-     * @param string $baseurl
-     * @param int $page
-     * @param int $perpage
-     * @param string $download
-     * @return string
+     * @param string $baseurl Base url for table.
+     * @param int $page The page to display.
+     * @return string Rendered HTML.
      */
     public function render_content(string $baseurl, int $page = 0): string {
 
         $html = $this->render_add_button();
         $html .= \html_writer::start_div('tool-broadcast-table-container', array('id' => 'tool-broadcast-table-container'));
-        $html .= $this->get_loader(true);
+        $html .= $this->get_loader();
         $html .= \html_writer::start_div('tool-broadcast-table', array('id' => 'tool-broadcast-table'));
         $html .= $this->render_message_table($baseurl, $page);
         $html .= \html_writer::end_div();

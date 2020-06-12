@@ -113,7 +113,7 @@ class create_form extends \moodleform {
         } else {
             // Moodle 3.5 hack.
             require_once($CFG->libdir . '/coursecatlib.php');
-            $categories = coursecat::make_categories_list('tool/broadcast:createbroadcasts');
+            $categories = \coursecat::make_categories_list('tool/broadcast:createbroadcasts');
         }
 
         $categoryoptions = array(

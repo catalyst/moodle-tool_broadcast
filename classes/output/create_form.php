@@ -44,6 +44,7 @@ class create_form extends \moodleform {
      * @see \moodleform::definition()
      */
     public function definition() {
+        global $CFG;
 
         $mform = $this->_form;
         $contextid = $this->_customdata['contextid'];
@@ -107,7 +108,13 @@ class create_form extends \moodleform {
         $mform->addElement('select', 'scopesite', get_string('scopesite', 'tool_broadcast'), $scopesite);
         $mform->addHelpButton('scopesite', 'scopesite', 'tool_broadcast');
 
-        $categories = \core_course_category::make_categories_list('tool/broadcast:createbroadcasts');
+        if (class_exists('\core_course_category')) {
+            $categories = \core_course_category::make_categories_list('tool/broadcast:createbroadcasts');
+        } else {
+            // Moodle 3.5 hack.
+            require_once($CFG->libdir . '/coursecatlib.php');
+            $categories = coursecat::make_categories_list('tool/broadcast:createbroadcasts');
+        }
 
         $categoryoptions = array(
             'multiple' => false,

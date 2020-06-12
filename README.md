@@ -6,18 +6,42 @@ TODO Describe the plugin shortly here.
 
 TODO Provide more detailed description here.
 
-## License ##
 
-2020 Matt Porritt <mattp@catalyst-au.net>
+## Supported Moodle Versions
 
-This program is free software: you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation, either version 3 of the License, or (at your option) any later
-version.
+This plugin current suports and is tested against the following versions of Moodle:
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+* 3.5
+* 3.7
+* 3.8
+* 3.9
 
-You should have received a copy of the GNU General Public License along with
-this program.  If not, see <http://www.gnu.org/licenses/>.
+## Installation
+
+You can install this plugin from the plugin directory or get the latest version
+on GitHub.
+
+```bash
+git clone https://github.com/catalyst/moodle-tool_broadcast admin/tool/broadcast
+```
+
+# Crafted by Catalyst IT
+
+
+This plugin was developed by Catalyst IT Australia:
+
+https://www.catalyst-au.net/
+
+![Catalyst IT](/pix/catalyst-logo.png?raw=true)
+
+
+# Contributing and Support
+
+Issues, and pull requests using github are welcome and encouraged! 
+
+https://github.com/catalyst/moodle-local_aws/issues
+
+If you would like commercial support or would like to sponsor additional improvements
+to this plugin please contact us:
+
+https://www.catalyst-au.net/contact-us

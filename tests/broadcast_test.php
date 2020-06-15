@@ -126,6 +126,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
      * Test getting broadcast messages.
      */
     public function test_get_broadcasts() {
+        global $DB;
 
         // Create a course with activity.
         $generator = $this->getDataGenerator();
@@ -137,7 +138,9 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
 
         $assign = new assign(context_module::instance($assignrow->cmid), false, false);
         $user = $generator->create_user();
-        $user->lastlogin = time() - 1000;
+        $user->lastlogin = 1591842950;
+
+        $DB->update_record('user', $user);
 
         // Enrol user into the course.
         $generator->enrol_user($user->id, $course->id, 'student');
@@ -163,10 +166,25 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $broadcast = new \tool_broadcast\broadcast();
         $broadcastid = $broadcast->create_broadcast($formdata);
 
-        $broadcasts = $broadcast->get_broadcasts($contextassignid, $user->id);
+        $now = 1591842970;
+        $broadcasts = $broadcast->get_broadcasts($contextassignid, $user->id, $now);
 
         $this->assertEquals($formdata->title, $broadcasts[$broadcastid]->title);
         $this->assertEquals($formdata->message['text'], $broadcasts[$broadcastid]->body);
+
+        $now = 1591842960;
+        $broadcasts = $broadcast->get_broadcasts($contextassignid, $user->id, $now);
+        $this->assertEmpty($broadcasts); // No broadcasts as start time is in the future.
+
+        $now = 1591846570;
+        $broadcasts = $broadcast->get_broadcasts($contextassignid, $user->id, $now);
+        $this->assertEmpty($broadcasts); // No broadcasts as end time is in the past.
+
+        $user->lastlogin = 1591842970;
+        $DB->update_record('user', $user);
+        $now = 1591842970;
+        $broadcasts = $broadcast->get_broadcasts($contextassignid, $user->id, $now);
+        $this->assertEmpty($broadcasts); // No broadcasts as user login time is after broadcast is active.
 
     }
 
@@ -174,6 +192,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
      * Test checking for broadcast messages.
      */
     public function test_check_broadcasts() {
+        global $DB;
 
         // Create a course with activity.
         $generator = $this->getDataGenerator();
@@ -185,7 +204,9 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
 
         $assign = new assign(context_module::instance($assignrow->cmid), false, false);
         $user = $generator->create_user();
-        $user->lastlogin = time() - 1000;
+        $user->lastlogin = 1591842950;
+
+        $DB->update_record('user', $user);
 
         // Enrol user into the course.
         $generator->enrol_user($user->id, $course->id, 'student');
@@ -215,8 +236,23 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
 
         $broadcast->create_broadcast($formdata);
 
-        $broadcasts = $broadcast->check_broadcasts($contextassignid, $user->id);
+        $now = 1591842970;
+        $broadcasts = $broadcast->check_broadcasts($contextassignid, $user->id, $now);
         $this->assertTrue($broadcasts);
+
+        $now = 1591842950;
+        $broadcasts = $broadcast->check_broadcasts($contextassignid, $user->id, $now);
+        $this->assertFalse($broadcasts); // False as time start is in the future.
+
+        $now = 1591846570;
+        $broadcasts = $broadcast->check_broadcasts($contextassignid, $user->id, $now);
+        $this->assertFalse($broadcasts); // False as time end is in the past.
+
+        $user->lastlogin = 1591842970;
+        $DB->update_record('user', $user);
+        $now = 1591842970;
+        $broadcasts = $broadcast->check_broadcasts($contextassignid, $user->id, $now);
+        $this->assertFalse($broadcasts); // No broadcasts as user login time is after broadcast is active.
 
     }
 
@@ -261,7 +297,8 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $broadcast = new \tool_broadcast\broadcast();
         $broadcastid = $broadcast->create_broadcast($formdata);
 
-        $broadcasts = $broadcast->get_broadcasts($contextassignid, $user->id);
+        $now = 1591842970;
+        $broadcasts = $broadcast->get_broadcasts($contextassignid, $user->id, $now);
 
         $this->assertEquals($formdata->title, $broadcasts[$broadcastid]->title);
         $this->assertEquals($formdata->message['text'], $broadcasts[$broadcastid]->body);

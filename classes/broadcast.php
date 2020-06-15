@@ -148,7 +148,7 @@ class broadcast {
                 'hour' => date('H', $broadcast->timeend),
                 'minute' => date('i', $broadcast->timeend)
             ),
-            'loggedin' => 1
+            'loggedin' => $broadcast->loggedin
         );
 
         if ($context->contextlevel == CONTEXT_COURSECAT) {
@@ -171,25 +171,39 @@ class broadcast {
      * @param int $userid The user ID that the broadcasts relate to.
      * @return array $records The broadcast records.
      */
-    public function get_broadcasts(int $contextid, int $userid): array {
+    public function get_broadcasts(int $contextid, int $userid, int $now=0): array {
         global $DB;
 
         $context = \context::instance_by_id($contextid);
         $parentcontexts = $context->get_parent_context_ids(true);
 
-        // A broadcast message for this context or any of it's parents are valid.
-        // TODO: add filtering for dates
-        // TODO: add filtering for logged in user switch.
+        if ($now == 0) {
+            $now = time();
+        }
 
         list($insql, $inparams) = $DB->get_in_or_equal($parentcontexts);
-        $sql = "SELECT b.id, b.title, b.body, b.loggedin, u.lastlogin
+        $sql = "SELECT b.id, b.title, b.body, b.loggedin, b.timestart
                   FROM {tool_broadcast} b
              LEFT JOIN {tool_broadcast_users} bu ON b.id = bu.broadcastid
-             LEFT JOIN {user} u ON bu.userid = u.id
                  WHERE b.contextid $insql
                        AND bu.userid is NULL
+                       AND b.timestart < ?
+                       AND b.timeend > ?
                    ";
+        $inparams[] = $now; // Timestart var.
+        $inparams[] = $now; // Timeend var.
+
         $records = $DB->get_records_sql($sql, $inparams);
+
+        foreach ($records as $record) {
+            // Filter broadcasts limited to users who are logged in at the time of the message becoming active.
+            if ($record->loggedin == 1) {
+                $lastlogin = $DB->get_field('user', 'lastlogin', array('id' => $userid), MUST_EXIST);
+                if ($lastlogin > $record->timestart) {
+                    unset ($records[$record->id]);
+                }
+            }
+        }
 
         return $records;
     }
@@ -201,25 +215,45 @@ class broadcast {
      * @param int $userid The user ID that the broadcasts relate to.
      * @return bool
      */
-    public function check_broadcasts(int $contextid, int $userid): bool {
+    public function check_broadcasts(int $contextid, int $userid, int $now=0): bool {
         global $DB;
 
-        $context = \context::instance_by_id($contextid, MUST_EXIST);
+        $context = \context::instance_by_id($contextid);
         $parentcontexts = $context->get_parent_context_ids(true);
 
-        // A broadcast message for this context or any of it's parents are valid.
-        // TODO: add filtering for dates
-        // TODO: add filtering for logged in user switch.
+        if ($now == 0) {
+            $now = time();
+        }
 
         list($insql, $inparams) = $DB->get_in_or_equal($parentcontexts);
-        $sql = "SELECT b.id, b.title, b.body, b.loggedin, u.lastlogin
+        $sql = "SELECT b.id, b.title, b.body, b.loggedin, b.timestart
                   FROM {tool_broadcast} b
              LEFT JOIN {tool_broadcast_users} bu ON b.id = bu.broadcastid
-             LEFT JOIN {user} u ON bu.userid = u.id
                  WHERE b.contextid $insql
                        AND bu.userid is NULL
+                       AND b.timestart < ?
+                       AND b.timeend > ?
                    ";
-        $exists = $DB->record_exists_sql($sql, $inparams);
+        $inparams[] = $now; // Timestart var.
+        $inparams[] = $now; // Timeend var.
+
+        $records = $DB->get_records_sql($sql, $inparams);
+
+        foreach ($records as $record) {
+            // Filter broadcasts limited to users who are logged in at the time of the message becoming active.
+            if ($record->loggedin == 1) {
+                $lastlogin = $DB->get_field('user', 'lastlogin', array('id' => $userid), MUST_EXIST);
+                if ($lastlogin > $record->timestart) {
+                    unset ($records[$record->id]);
+                }
+            }
+        }
+
+        if (empty($records)) {
+            $exists = false;
+        } else {
+            $exists = true;
+        }
 
         return $exists;
     }

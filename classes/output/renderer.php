@@ -76,7 +76,7 @@ class renderer extends \plugin_renderer_base {
      */
     private function get_loader(): string {
 
-        return $this->render_from_template('tool_broadcast/loader', $context);
+        return $this->render_from_template('tool_broadcast/loader', array());
     }
 
     /**

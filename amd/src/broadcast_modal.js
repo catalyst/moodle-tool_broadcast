@@ -75,6 +75,9 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
 
     };
 
+    /**
+     * Display the Modal message to the user.
+     */
     const displayMessages = function() {
         // If modal window is not currently displayed, check for queue messages.
         if (!modalObj.getRoot()[0].classList.contains('show')) {
@@ -94,9 +97,13 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
         }
     };
 
+    /**
+     * Process user acknowledgin the message.
+     */
     const acceptMessage = function() {
         modalObj.setBody(spinner);
         let broadcastid = modalObj.footer[0].dataset.id;
+        delete messageQueue[broadcastid];
 
         Ajax.call([{
             methodname: 'tool_broadcast_acknowledge_broadcast',
@@ -144,6 +151,9 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
         });
     };
 
+    /**
+     * Initiliase the modal display and associated listeners.
+     */
     BroadcastModal.init = function(context) {
         contextid = context;
 

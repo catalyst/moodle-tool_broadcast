@@ -2,9 +2,7 @@
 
 # Broadcast message #
 
-TODO Describe the plugin shortly here.
-
-TODO Provide more detailed description here.
+This plugin allows sending of broadcast messages to users.
 
 
 ## Supported Moodle Versions
@@ -39,7 +37,7 @@ https://www.catalyst-au.net/
 
 Issues, and pull requests using github are welcome and encouraged! 
 
-https://github.com/catalyst/moodle-local_aws/issues
+https://github.com/catalyst/moodle-tool_broadcast/issues
 
 If you would like commercial support or would like to sponsor additional improvements
 to this plugin please contact us:

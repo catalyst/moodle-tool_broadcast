@@ -65,6 +65,8 @@ class ackreport_table extends table_sql implements renderable {
      * report_table constructor.
      *
      * @param string $uniqueid Unique id of table.
+     * @param int $broadcastid The boradcast id to display acks for.
+     * @param int $contextid The context id.
      * @param string $baseurl the base url to render this report on.
      * @param int $page the page number for pagination.
      *

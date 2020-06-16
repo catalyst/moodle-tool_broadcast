@@ -384,7 +384,6 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
 
         $broadcast = $broadcast->get_broadcast_name($broadcastid);
 
-
         $this->assertEquals($formdata->title, $broadcast);
     }
 

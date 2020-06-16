@@ -38,6 +38,8 @@ class renderer extends \plugin_renderer_base {
     /**
      * Render the HTML for the message management table.
      *
+     * @param int $broadcastid The brodcast id to get the acknowledments from.
+     * @param int $contextid The context id.
      * @param string $baseurl the base url to render the table on.
      * @param int $page the page number for pagination.
      *

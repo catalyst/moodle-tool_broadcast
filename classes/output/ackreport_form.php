@@ -56,7 +56,7 @@ class ackreport_form extends \moodleform {
         // Form heading.
         $mform->addElement('html', \html_writer::div(get_string('selectbroadcastdesc', 'tool_broadcast'), 'form-description mb-3'));
 
-        // Broadcast selector
+        // Broadcast selector.
         $broadcast = new \tool_broadcast\broadcast();
         $broadcasts = array(0 => get_string('selectbroadcast', 'tool_broadcast')) + $broadcast->get_broadcast_names();
 

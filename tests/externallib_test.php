@@ -109,6 +109,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
      * Test ajax webservice to get broadcast messages.
      */
     public function test_get_broadcasts() {
+        global $DB;
 
         // Create a course with activity.
         $generator = $this->getDataGenerator();
@@ -120,7 +121,8 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
 
         $assign = new assign(context_module::instance($assignrow->cmid), false, false);
         $user = $generator->create_user();
-        $user->lastlogin = time() - 1000;
+        $user->lastlogin = 1591842950;
+        $DB->update_record('user', $user);
         $this->setUser($user);
 
         // Enrol user into the course.
@@ -142,7 +144,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
         $formdata->scopesite = 2;
         $formdata->courses = $course->id;
         $formdata->activefrom = 1591842960;
-        $formdata->expiry = 1591846560;
+        $formdata->expiry = time() + 1000;
         $formdata->loggedin = 1;
 
         // Create the broadcast.
@@ -163,6 +165,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
      * Test ajax webservice to check if there are broadcast messages.
      */
     public function test_check_broadcasts() {
+        global $DB;
 
         // Create a course with activity.
         $generator = $this->getDataGenerator();
@@ -174,7 +177,8 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
 
         $assign = new assign(context_module::instance($assignrow->cmid), false, false);
         $user = $generator->create_user();
-        $user->lastlogin = time() - 1000;
+        $user->lastlogin = 1591842950;
+        $DB->update_record('user', $user);
         $this->setUser($user);
 
         // Enrol user into the course.
@@ -196,7 +200,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
         $formdata->scopesite = 2;
         $formdata->courses = $course->id;
         $formdata->activefrom = 1591842960;
-        $formdata->expiry = 1591846560;
+        $formdata->expiry = time() + 1000;
         $formdata->loggedin = 1;
 
         // Create the broadcast.

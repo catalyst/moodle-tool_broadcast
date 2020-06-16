@@ -167,6 +167,7 @@ class broadcast {
      *
      * @param int $contextid The context ID to get broadcasts for.
      * @param int $userid The user ID that the broadcasts relate to.
+     * @param int $now The time to get broadcasts for.
      * @return array $records The broadcast records.
      */
     public function get_broadcasts(int $contextid, int $userid, int $now=0): array {
@@ -211,6 +212,7 @@ class broadcast {
      *
      * @param int $contextid The context ID to get broadcasts for.
      * @param int $userid The user ID that the broadcasts relate to.
+     * @param int $now The time to get broadcasts for.
      * @return bool
      */
     public function check_broadcasts(int $contextid, int $userid, int $now=0): bool {

@@ -204,7 +204,7 @@ class ackreport_table extends table_sql implements renderable {
                  LEFT JOIN {tool_broadcast_users} bu ON u.id = bu.userid
                      WHERE bu.broadcastid = :broadcastid";
 
-            if(!empty($wsql)) {
+            if (!empty($wsql)) {
                 $sql .= " AND " .$wsql;
                 $countsql .= " AND " .$wsql;
                 $params = array_merge($params, $wparams);

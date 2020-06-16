@@ -228,6 +228,10 @@ class broadcast_table extends table_sql implements renderable {
         $icon = $OUTPUT->render(new \pix_icon('t/delete', get_string('deletebroadcast', 'tool_broadcast')));
         $manage .= \html_writer::link($deleteurl, $icon, array('class' => 'action-icon'));
 
+        $reporturl = new \moodle_url('/admin/tool/broadcast/acknowledgereport.php', array('broadcastid' => $row->id));
+        $icon = $OUTPUT->render(new \pix_icon('i/report', get_string('viewackreport', 'tool_broadcast')));
+        $manage .= \html_writer::link($reporturl, $icon, array('class' => 'action-icon'));
+
         return $manage;
     }
 

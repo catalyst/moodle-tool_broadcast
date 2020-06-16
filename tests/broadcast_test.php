@@ -358,4 +358,61 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $this->assertEquals($formdata->message['text'], $broadcast['message']['text']);
         $this->assertEquals($course->id, $broadcast['courses']);
     }
+
+    /**
+     * Test getting broadcast name.
+     */
+    public function test_get_broadcast_name() {
+
+        // Mock up the form data for use in tests.
+        $formdata = new \stdClass;
+        $formdata->contextid = 1;
+        $formdata->title = 'foo';
+        $formdata->message = array(
+            'text' => '<p dir="ltr" style="text-align: left;">one <strong>two </strong>threee<br></p>',
+            'format' => 1
+        );
+        $formdata->scopesite = 2;
+        $formdata->courses = 1;
+        $formdata->activefrom = 1591842960;
+        $formdata->expiry = 1591846560;
+        $formdata->loggedin = 1;
+
+        // Create the broadcast.
+        $broadcast = new \tool_broadcast\broadcast();
+        $broadcastid = $broadcast->create_broadcast($formdata);
+
+        $broadcast = $broadcast->get_broadcast_name($broadcastid);
+
+
+        $this->assertEquals($formdata->title, $broadcast);
+    }
+
+    /**
+     * Test getting broadcast name.
+     */
+    public function test_get_broadcast_names() {
+
+        // Mock up the form data for use in tests.
+        $formdata = new \stdClass;
+        $formdata->contextid = 1;
+        $formdata->title = 'foo';
+        $formdata->message = array(
+            'text' => '<p dir="ltr" style="text-align: left;">one <strong>two </strong>threee<br></p>',
+            'format' => 1
+        );
+        $formdata->scopesite = 2;
+        $formdata->courses = 1;
+        $formdata->activefrom = 1591842960;
+        $formdata->expiry = 1591846560;
+        $formdata->loggedin = 1;
+
+        // Create the broadcast.
+        $broadcast = new \tool_broadcast\broadcast();
+        $broadcastid = $broadcast->create_broadcast($formdata);
+
+        $broadcast = $broadcast->get_broadcast_names();
+
+        $this->assertEquals($formdata->title, $broadcast[$broadcastid]);
+    }
 }

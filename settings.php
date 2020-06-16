@@ -33,5 +33,7 @@ if ($hassiteconfig) {
 
     $ADMIN->add('tool_broadcast', $workflowsettings);
 
-    $settings = null;
+    // Report link.
+    $ADMIN->add('reports', new admin_externalpage('tool_broadcast_report',
+        get_string('acknowledgereport', 'tool_broadcast'), "$CFG->wwwroot/admin/tool/broadcast/acknowledgereport.php"));
 }

@@ -43,6 +43,26 @@ class renderer extends \plugin_renderer_base {
      *
      * @return string $output HTML for the table.
      */
+    public function render_ackreport(int $broadcastid, int $contextid, string $baseurl, int $page = 0) {
+        $renderable = new ackreport_table('tool_broadcast_ackreport', $broadcastid, $contextid, $baseurl, $page);
+        $perpage = 50;
+
+        ob_start();
+        $renderable->out($perpage, true);
+        $output = ob_get_contents();
+        ob_end_clean();
+
+        return $output;
+    }
+
+    /**
+     * Render the HTML for the message management table.
+     *
+     * @param string $baseurl the base url to render the table on.
+     * @param int $page the page number for pagination.
+     *
+     * @return string $output HTML for the table.
+     */
     public function render_message_table(string $baseurl, int $page = 0) {
         $renderable = new broadcast_table('tool_broadcast', $baseurl, $page);
         $perpage = 50;

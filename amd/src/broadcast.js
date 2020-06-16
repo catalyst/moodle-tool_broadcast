@@ -170,16 +170,20 @@ function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
 
     const copyBroadcast = function(event) {
         event.preventDefault();
-        let broadcastid = event.target.parentElement.id.substring(20);
-        updateModalBody({}, broadcastid, 'copy');
-        modalObj.show();
+        const broadcastid = event.target.parentElement.id.substring(20);
+        if (broadcastid != '') {
+            updateModalBody({}, broadcastid, 'copy');
+            modalObj.show();
+        }
     };
 
     const editBroadcast = function(event) {
         event.preventDefault();
-        let broadcastid = event.target.parentElement.id.substring(20);
-        updateModalBody({}, broadcastid, 'edit');
-        modalObj.show();
+        const broadcastid = event.target.parentElement.id.substring(20);
+        if (broadcastid != '') {
+            updateModalBody({}, broadcastid, 'edit');
+            modalObj.show();
+        }
     };
 
     const tableEventListeners = function() {

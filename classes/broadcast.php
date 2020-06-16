@@ -24,8 +24,6 @@
 
 namespace tool_broadcast;
 
-use core\access\get_user_capability_course_helper;
-
 defined('MOODLE_INTERNAL') || die;
 
 /**
@@ -307,5 +305,32 @@ class broadcast {
         }
 
         return $courses;
+    }
+
+    /**
+     * Get the name of a broadcast message.
+     *
+     * @param int $broadcastid The id of the broadcast to get the name for.
+     * @return string $broadcastname The name of the retrieved broadcast.
+     */
+    public function get_broadcast_name(int $broadcastid): string {
+        global $DB;
+
+        $broadcastname = $DB->get_field('tool_broadcast', 'title', array('id' => $broadcastid));
+
+        return $broadcastname;
+    }
+
+    /**
+     * Get the list of broadcast names.
+     *
+     * @return array $broadcastname The list of the retrieved broadcasts.
+     */
+    public function get_broadcast_names(): array {
+        global $DB;
+
+        $broadcastnames = $DB->get_records_menu('tool_broadcast', array(), 'title ASC', 'id, title');
+
+        return $broadcastnames;
     }
 }

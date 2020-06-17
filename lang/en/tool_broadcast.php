@@ -65,6 +65,7 @@ $string['missingbroadcasttitle'] = 'Missing broadcast title';
 $string['privacy:metadata:tool_broadcast'] = 'Data relating users for the broadcast plugin';
 $string['privacy:metadata:tool_broadcast_user'] = 'Data relating users with broadcast events';
 $string['privacy:metadata:tool_broadcast_user:id'] = 'Record ID';
+$string['privacy:metadata:tool_broadcast_user:broadcastid'] = 'The broadcast ID';
 $string['privacy:metadata:tool_broadcast_user:userid'] = 'The ID of the user that is effected by the broadcast';
 $string['privacy:metadata:tool_broadcast_user:contextid'] = 'The context ID that relates to the broadcast';
 $string['privacy:metadata:tool_broadcast_user:acktime'] = 'The time the user acknowledged the broadcast';

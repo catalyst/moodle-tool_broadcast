@@ -28,7 +28,7 @@ require_once($CFG->libdir . '/adminlib.php');
 $baseurl = $CFG->wwwroot . "/admin/tool/broadcast/acknowledgereport.php";
 
 // Calls require_login and performs permissions checks for admin pages.
-admin_externalpage_setup('tool_broadcast_broadcastsettings', '', null, '',
+admin_externalpage_setup('tool_broadcast_report', '', null, '',
     array('pagelayout' => 'admin'));
 
 $broadcastid = optional_param('broadcastid', 0, PARAM_INT);

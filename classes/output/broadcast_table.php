@@ -41,21 +41,6 @@ use \renderable;
 class broadcast_table extends table_sql implements renderable {
 
     /**
-     * The required fields from the DB for this table.
-     *
-     * @var string
-     */
-    const FIELDS = 'id, contextid, title, body, loggedin, timecreated, timestart, timeend';
-
-    /**
-     * The default WHERE clause.
-     *
-     * @var string
-     */
-    const DEFAULT_WHERE = 'id > 0';
-
-
-    /**
      * report_table constructor.
      *
      * @param string $uniqueid Unique id of table.
@@ -96,9 +81,8 @@ class broadcast_table extends table_sql implements renderable {
 
         // Setup pagination.
         $this->currpage = $page;
-        $this->sortable(true, 'timecreated', SORT_DESC);
-        $this->column_nosort = array('status', 'actions');
-        $this->set_sql(self::FIELDS, '{tool_broadcast}', self::DEFAULT_WHERE);
+        $this->sortable(true);
+        $this->column_nosort = array('contextid', 'actions');
 
     }
 
@@ -233,6 +217,37 @@ class broadcast_table extends table_sql implements renderable {
         $manage .= \html_writer::link($reporturl, $icon, array('class' => 'action-icon'));
 
         return $manage;
+    }
+
+    /**
+     * Query the database for results to display in the table.
+     *
+     * @param int $pagesize size of page for paginated displayed table.
+     * @param bool $useinitialsbar do you want to use the initials bar.
+     */
+    public function query_db($pagesize, $useinitialsbar = true) {
+        global $DB;
+
+        $sort = $this->get_sql_sort();
+
+        $countsql = "SELECT COUNT(1) FROM {tool_broadcast}";
+        $sql = "SELECT * FROM {tool_broadcast}";
+
+        if (!empty($sort)) {
+            $sql .= " ORDER BY $sort";
+        }
+
+        $total = $DB->count_records_sql($countsql);
+        $this->pagesize($pagesize, $total);
+
+        $records = $DB->get_records_sql($sql, array(), $this->get_page_start(), $this->get_page_size());
+
+        $this->rawdata = $records;
+
+        // Set initial bars.
+        if ($useinitialsbar) {
+            $this->initialbars(true);
+        }
     }
 
 }

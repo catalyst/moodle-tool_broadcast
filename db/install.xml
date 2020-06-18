@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="admin/tool/broadcast/db" VERSION="20200609" COMMENT="XMLDB file for Moodle admin/tool/broadcast"
+<XMLDB PATH="admin/tool/broadcast/db" VERSION="20200618" COMMENT="XMLDB file for Moodle admin/tool/broadcast"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
 >
@@ -12,6 +12,10 @@
         <FIELD NAME="body" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The body of the message"/>
         <FIELD NAME="bodyformat" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="The format of the body text. HTML etc."/>
         <FIELD NAME="loggedin" TYPE="binary" NOTNULL="true" SEQUENCE="false" COMMENT="If true then this broadcast message will only be sent to users who were logged in at the time of broadcast creation."/>
+        <FIELD NAME="mode" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="The mode of message delivery.
+1 = modal
+2 = Bootstrap notification
+3 = both"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time the broadcast was created"/>
         <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Time the broadcast message starts"/>
         <FIELD NAME="timeend" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The time the broadcast message ends (expires)."/>

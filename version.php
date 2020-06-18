@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'tool_broadcast';
-$plugin->release = '2020060700';
-$plugin->version = 2020060700;
+$plugin->release = '2020061800';
+$plugin->version = 2020061800;
 $plugin->requires = 2018051700;
 $plugin->maturity = MATURITY_ALPHA;

@@ -132,7 +132,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
                     type: ModalFactory.types.DEFAULT,
                     title: title,
                     body: spinner,
-                    footer: footerBtn,
+                    footer: footerBtn.outerHTML, // Mooodle 3.5 compatibility fix.
                     large: true
                 })
                 .done((modal) => {

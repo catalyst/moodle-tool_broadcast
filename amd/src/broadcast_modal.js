@@ -135,7 +135,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
                     footer: footerBtn,
                     large: true
                 })
-                .then((modal) => {
+                .done((modal) => {
                     modalObj = modal;
                     modalObj.getRoot().on('click', '#tool-broadcast-accept-broadcast', (e) => {
                         e.preventDefault();

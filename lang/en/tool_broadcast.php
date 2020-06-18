@@ -62,6 +62,15 @@ $string['loggedinonly'] = 'Logged in only';
 $string['manage'] = 'Manage broadcasts';
 $string['missingbroadcastmessage'] = 'Missing broadcast title';
 $string['missingbroadcasttitle'] = 'Missing broadcast title';
+$string['mode'] = 'Mode';
+$string['mode_help'] = 'The settings defines how the broadcast message will be displayed to the user.
+
+Modal: A modal window will be displayed
+Bootstrap notification: A notification at the top of the page will be displayed.
+Both: A modal window and a bootstrap notification will be displayed.';
+$string['mode:modal'] = 'Modal';
+$string['mode:bootstrap'] = 'Bootstrap notification';
+$string['mode:both'] = 'Both';
 $string['privacy:metadata:tool_broadcast'] = 'Data relating users for the broadcast plugin';
 $string['privacy:metadata:tool_broadcast_user'] = 'Data relating users with broadcast events';
 $string['privacy:metadata:tool_broadcast_user:id'] = 'Record ID';

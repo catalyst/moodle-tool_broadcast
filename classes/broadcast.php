@@ -58,6 +58,7 @@ class broadcast {
         $record->body = $formdata->message['text'];
         $record->bodyformat = $formdata->message['format'];
         $record->loggedin = (bool)$formdata->loggedin;
+        $record->mode = $formdata->mode;
         $record->timecreated = time();
         $record->timestart = $formdata->activefrom;
         $record->timeend = $formdata->expiry;
@@ -91,6 +92,7 @@ class broadcast {
         $record->body = $formdata->message['text'];
         $record->bodyformat = $formdata->message['format'];
         $record->loggedin = (bool)$formdata->loggedin;
+        $record->mode = $formdata->mode;
         $record->timecreated = time();
         $record->timestart = $formdata->activefrom;
         $record->timeend = $formdata->expiry;
@@ -146,7 +148,8 @@ class broadcast {
                 'hour' => date('H', $broadcast->timeend),
                 'minute' => date('i', $broadcast->timeend)
             ),
-            'loggedin' => $broadcast->loggedin
+            'loggedin' => $broadcast->loggedin,
+            'mode' => $broadcast->mode
         );
 
         if ($context->contextlevel == CONTEXT_COURSECAT) {
@@ -181,7 +184,7 @@ class broadcast {
         }
 
         list($insql, $inparams) = $DB->get_in_or_equal($parentcontexts);
-        $sql = "SELECT b.id, b.title, b.body, b.loggedin, b.timestart
+        $sql = "SELECT b.id, b.title, b.body, b.loggedin, b.timestart, b.mode
                   FROM {tool_broadcast} b
              LEFT JOIN {tool_broadcast_users} bu ON b.id = bu.broadcastid
                  WHERE b.contextid $insql
@@ -226,7 +229,7 @@ class broadcast {
         }
 
         list($insql, $inparams) = $DB->get_in_or_equal($parentcontexts);
-        $sql = "SELECT b.id, b.title, b.body, b.loggedin, b.timestart
+        $sql = "SELECT b.id, b.loggedin, b.timestart
                   FROM {tool_broadcast} b
              LEFT JOIN {tool_broadcast_users} bu ON b.id = bu.broadcastid
                  WHERE b.contextid $insql

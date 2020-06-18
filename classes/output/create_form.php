@@ -135,6 +135,15 @@ class create_form extends \moodleform {
         $mform->addElement('autocomplete', 'courses', get_string('courses', 'tool_broadcast'), $courses, $courseoptions);
         $mform->hideIf('courses', 'scopesite', 'ne', 2);
 
+        // Mode setting.
+        $scopesite = array(
+            1 => get_string('mode:modal', 'tool_broadcast'),
+            2 => get_string('mode:bootstrap', 'tool_broadcast'),
+            3 => get_string('mode:both', 'tool_broadcast')
+        );
+        $mform->addElement('select', 'mode', get_string('mode', 'tool_broadcast'), $scopesite);
+        $mform->addHelpButton('mode', 'mode', 'tool_broadcast');
+
         // Active date.
         $activeoptions = array(
             'startyear' => date("Y"),

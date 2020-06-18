@@ -44,7 +44,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
         Ajax.call([{
             methodname: 'tool_broadcast_get_broadcasts',
             args: {contextid: contextid}
-        }])[0].then((response) => {
+        }])[0].done((response) => {
             let messages = JSON.parse(response);
             for (const message in messages) {
                 let messageId = messages[message].id;
@@ -64,7 +64,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
         Ajax.call([{
             methodname: 'tool_broadcast_check_broadcasts',
             args: {contextid: contextid}
-        }], true, false)[0].then((response) => {
+        }], true, false)[0].done((response) => {
             let responseObj = JSON.parse(response);
             if (responseObj) { // We have messages.
                 getMessages();

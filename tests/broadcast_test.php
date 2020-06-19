@@ -99,6 +99,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $formdata->activefrom = 1591842960;
         $formdata->expiry = 1591846560;
         $formdata->loggedin = 1;
+        $formdata->mode = 1;
 
         $broadcast = new \tool_broadcast\broadcast();
         $result = $broadcast->create_broadcast($formdata);
@@ -162,6 +163,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $formdata->activefrom = 1591842960;
         $formdata->expiry = 1591846560;
         $formdata->loggedin = 1;
+        $formdata->mode = 1;
 
         // Create the broadcast.
         $broadcast = new \tool_broadcast\broadcast();
@@ -228,6 +230,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $formdata->activefrom = 1591842960;
         $formdata->expiry = 1591846560;
         $formdata->loggedin = 1;
+        $formdata->mode = 1;
 
         // Create the broadcast.
         $broadcast = new \tool_broadcast\broadcast();
@@ -293,6 +296,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $formdata->activefrom = 1591842960;
         $formdata->expiry = 1591846560;
         $formdata->loggedin = 1;
+        $formdata->mode = 1;
 
         // Create the broadcast.
         $broadcast = new \tool_broadcast\broadcast();
@@ -348,6 +352,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $formdata->activefrom = 1591842960;
         $formdata->expiry = 1591846560;
         $formdata->loggedin = 1;
+        $formdata->mode = 1;
 
         // Create the broadcast.
         $broadcast = new \tool_broadcast\broadcast();
@@ -378,6 +383,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $formdata->activefrom = 1591842960;
         $formdata->expiry = 1591846560;
         $formdata->loggedin = 1;
+        $formdata->mode = 1;
 
         // Create the broadcast.
         $broadcast = new \tool_broadcast\broadcast();
@@ -406,6 +412,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $formdata->activefrom = 1591842960;
         $formdata->expiry = 1591846560;
         $formdata->loggedin = 1;
+        $formdata->mode = 1;
 
         // Create the broadcast.
         $broadcast = new \tool_broadcast\broadcast();

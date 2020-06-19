@@ -89,6 +89,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
             'minute' => 32
         );
         $formdata->loggedin = 1;
+        $formdata->mode = 1;
 
         $urlform = http_build_query($formdata, '', '&'); // Take the form data and url encode it.
         $jsonformdata = json_encode($urlform); // Take form string and JSON encode.
@@ -146,6 +147,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
         $formdata->activefrom = 1591842960;
         $formdata->expiry = time() + 1000;
         $formdata->loggedin = 1;
+        $formdata->mode = 1;
 
         // Create the broadcast.
         $broadcast = new \tool_broadcast\broadcast();
@@ -202,6 +204,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
         $formdata->activefrom = 1591842960;
         $formdata->expiry = time() + 1000;
         $formdata->loggedin = 1;
+        $formdata->mode = 1;
 
         // Create the broadcast.
         $broadcast = new \tool_broadcast\broadcast();
@@ -254,6 +257,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
         $formdata->activefrom = 1591842960;
         $formdata->expiry = 1591846560;
         $formdata->loggedin = 1;
+        $formdata->mode = 1;
 
         // Create the broadcast.
         $broadcast = new \tool_broadcast\broadcast();

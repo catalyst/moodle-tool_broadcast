@@ -76,31 +76,84 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
     };
 
     /**
-     * Display the Modal message to the user.
+     * Display message to user as a modal.
+     *
+     * @param {object} message The message to display.
      */
-    const displayMessages = function() {
-        // If modal window is not currently displayed, check for queue messages.
+    const displayMessageModal = function(message) {
         if (!modalObj.getRoot()[0].classList.contains('show')) {
-            for (const message in messageQueue) {
-                // Display the message in the modal.
-                modalObj.setTitle(messageQueue[message].title);
-                modalObj.setBody(messageQueue[message].body);
-                modalObj.footer[0].dataset.id = messageQueue[message].id;
-                modalObj.show();
+            modalObj.setTitle(message.title);
+            modalObj.setBody(message.body);
+            modalObj.footer[0].dataset.id = message.id;
+            modalObj.show();
 
-                // Remove the message from the queue.
-                delete messageQueue[message];
-
-                // Exit the loop after showing one message.
-                break;
-            }
+            // Remove the message from the queue.
+            delete messageQueue[message];
         }
     };
 
     /**
-     * Process user acknowledgin the message.
+     * Display message to user as a boostrap notification.
+     *
+     * @param {object} message The message to display.
      */
-    const acceptMessage = function() {
+    const displayMessageNotification = function(message) {
+        const containerid = 'tool-broadcast-notification-' + message.id;
+        const existingContainer = document.getElementById(containerid);
+        //window.console.log(document.getElementById(containerid));
+
+        if (existingContainer === null) {
+            let container = document.createElement('span');
+            let header = document.createElement('h4');
+            let body = document.createElement('span');
+
+            container.id = containerid;
+            header.classList.add('alert-heading');
+            header.innerHTML = message.title;
+            body.innerHTML = message.body;
+
+            container.appendChild(header);
+            container.appendChild(body);
+
+            Notification.addNotification({
+                message: container.outerHTML,
+                type: 'warn'
+            })
+            .then(() => {
+                let notificationContainer = document.getElementById('user-notifications');
+                notificationContainer.addEventListener('click', acceptMessageNotification);
+            });
+
+            // Remove the message from the queue.
+            delete messageQueue[message];
+        }
+
+    };
+
+    /**
+     * Display the message to the user.
+     */
+    const displayMessages = function() {
+        // If modal window is not currently displayed, check for queue messages.
+        for (const message in messageQueue) {
+            if (messageQueue[message].mode == 1) { // Display the message in a modal.
+                displayMessageModal(messageQueue[message]);
+            } else if (messageQueue[message].mode == 2) { // Display the message as notification.
+                displayMessageNotification(messageQueue[message]);
+            } else if (messageQueue[message].mode == 3) { // Display the message both ways.
+                displayMessageModal(messageQueue[message]);
+                displayMessageNotification(messageQueue[message]);
+            }
+
+            // Exit the loop after showing one message.
+            break;
+            }
+    };
+
+    /**
+     * Process user acknowledging the message.
+     */
+    const acceptMessageModal = function() {
         modalObj.setBody(spinner);
         let broadcastid = modalObj.footer[0].dataset.id;
         delete messageQueue[broadcastid];
@@ -111,6 +164,29 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
         }])[0].fail(() => {
             Notification.exception(new Error('Failed to acknowledge broadcast messages'));
         });
+    };
+
+    /**
+     * Process user acknowledging the message.
+     */
+    const acceptMessageNotification = function(event) {
+        const elementName = event.target.tagName.toLowerCase();
+        if (elementName === 'button') { // Correct thing was clicked.
+            // Get the ID of the notification
+            let notificationChildren = event.target.parentElement.childNodes;
+            for (let i = 0; i < notificationChildren.length; i++) {
+                if ((notificationChildren[i].tagName !== undefined) && (notificationChildren[i].tagName.toLowerCase() === 'span')) {
+                    const broadcastid = notificationChildren[i].id.substring(28);
+                    delete messageQueue[broadcastid];
+                    Ajax.call([{
+                        methodname: 'tool_broadcast_acknowledge_broadcast',
+                        args: {contextid: contextid, broadcastid: broadcastid}
+                    }])[0].fail(() => {
+                        Notification.exception(new Error('Failed to acknowledge broadcast messages'));
+                    });
+                }
+            }
+        }
     };
 
     /**
@@ -141,7 +217,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
                         e.preventDefault();
                         modalObj.hide();
                     });
-                    modalObj.getRoot().on(ModalEvents.hidden, acceptMessage);
+                    modalObj.getRoot().on(ModalEvents.hidden, acceptMessageModal);
                     resolve();
 
                 });

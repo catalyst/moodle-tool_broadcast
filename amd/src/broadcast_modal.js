@@ -51,7 +51,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
                 messageQueue[messageId] = messages[message];
             }
         }).fail(() => {
-            Notification.exception(new Error('Failed to get broadcast messages'));
+            window.console.error(new Error('Failed to get broadcast messages'));
         });
     };
 
@@ -70,7 +70,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
                 getMessages();
             }
         }).fail(() => {
-            Notification.exception(new Error('Failed to get broadcast messages'));
+            window.console.error(new Error('Failed to check broadcast messages'));
         });
 
     };

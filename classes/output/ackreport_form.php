@@ -46,6 +46,7 @@ class ackreport_form extends \moodleform {
     public function definition() {
 
         $mform = $this->_form;
+        $mform->disable_form_change_checker();
 
         if (!empty($this->_customdata['broadcastid'])) {
             $broadcastid = $this->_customdata['broadcastid'];

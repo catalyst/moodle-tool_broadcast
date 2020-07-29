@@ -47,6 +47,8 @@ class create_form extends \moodleform {
         global $CFG;
 
         $mform = $this->_form;
+        $mform->disable_form_change_checker();
+
         $contextid = $this->_customdata['contextid'];
 
         if (!empty($this->_customdata['action'])) {

@@ -273,9 +273,12 @@ class broadcast {
 
         \context::instance_by_id($contextid, MUST_EXIST); // Confirm context exists, throw error if not.
 
-        $exists = $DB->record_exists('tool_broadcast', array('id' => $broadcastid)); // Confirm broadcast exists.
+        $transaction = $DB->start_delegated_transaction();
 
-        if ($exists) {
+        $broadcastexists = $DB->record_exists('tool_broadcast', array('id' => $broadcastid));
+        $ackexists = $DB->record_exists('tool_broadcast_users', array('broadcastid' => $broadcastid, 'userid' => $userid));
+
+        if ($broadcastexists && !$ackexists) {
             $ackrecord = new \stdClass();
             $ackrecord->broadcastid = $broadcastid;
             $ackrecord->userid = $userid;
@@ -283,8 +286,17 @@ class broadcast {
             $ackrecord->acktime = time();
 
             $DB->insert_record('tool_broadcast_users', $ackrecord);
+
+            $transaction->allow_commit();
         } else {
-            new \moodle_exception('Broadcast does not exist.');
+            try {
+                // This code feels like an anti-pattern but rolling back a transaction needs to be passed an exception
+                // and the rollback method thorws an exception, hence the catch.
+                $e = new \Exception('Can not acknowledge broadcast');
+                $transaction->rollback($e);
+            } catch(\Exception $e) {
+                return;
+            }
         }
     }
 

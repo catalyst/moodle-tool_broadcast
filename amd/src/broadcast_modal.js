@@ -31,7 +31,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
     var BroadcastModal = {};
     var contextid;
     var modalObj;
-    const spinner = '<p class="text-center">'
+    var spinner = '<p class="text-center">'
         + '<i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>'
         + '</p>';
     var messageQueue = {};
@@ -40,17 +40,17 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
      * Get broadcast messages for this user.
      * This is only called if the check messages method returns true.
      */
-    const getMessages = function() {
+    var getMessages = function() {
         Ajax.call([{
             methodname: 'tool_broadcast_get_broadcasts',
             args: {contextid: contextid}
-        }])[0].done((response) => {
-            let messages = JSON.parse(response);
-            for (const message in messages) {
-                let messageId = messages[message].id;
+        }])[0].done(function(response) {
+            var messages = JSON.parse(response);
+            for (var message in messages) {
+                var messageId = messages[message].id;
                 messageQueue[messageId] = messages[message];
             }
-        }).fail(() => {
+        }).fail(function() {
             window.console.error(new Error('Failed to get broadcast messages'));
         });
     };
@@ -60,16 +60,16 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
      * This is done as a discrete ajax call, so we don't update the user session
      * everytime we poll, and prevent the user from being logged out due to inactivity.
      */
-    const checkMessages = function() {
+    var checkMessages = function() {
         Ajax.call([{
             methodname: 'tool_broadcast_check_broadcasts',
             args: {contextid: contextid}
-        }], true, false)[0].done((response) => {
-            let responseObj = JSON.parse(response);
+        }], true, false)[0].done(function(response) {
+            var responseObj = JSON.parse(response);
             if (responseObj) { // We have messages.
                 getMessages();
             }
-        }).fail(() => {
+        }).fail(function() {
             window.console.error(new Error('Failed to check broadcast messages'));
         });
 
@@ -80,7 +80,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
      *
      * @param {object} message The message to display.
      */
-    const displayMessageModal = function(message) {
+    var displayMessageModal = function(message) {
         if (!modalObj.getRoot()[0].classList.contains('show')) {
             modalObj.setTitle(message.title);
             modalObj.setBody(message.body);
@@ -97,15 +97,14 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
      *
      * @param {object} message The message to display.
      */
-    const displayMessageNotification = function(message) {
-        const containerid = 'tool-broadcast-notification-' + message.id;
-        const existingContainer = document.getElementById(containerid);
-        //window.console.log(document.getElementById(containerid));
+    var displayMessageNotification = function(message) {
+        var containerid = 'tool-broadcast-notification-' + message.id;
+        var existingContainer = document.getElementById(containerid);
 
         if (existingContainer === null) {
-            let container = document.createElement('span');
-            let header = document.createElement('h4');
-            let body = document.createElement('span');
+            var container = document.createElement('span');
+            var header = document.createElement('h4');
+            var body = document.createElement('span');
 
             container.id = containerid;
             header.classList.add('alert-heading');
@@ -118,10 +117,6 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
             Notification.addNotification({
                 message: container.outerHTML,
                 type: 'warn'
-            })
-            .then(() => {
-                let notificationContainer = document.getElementById('user-notifications');
-                notificationContainer.addEventListener('click', acceptMessageNotification);
             });
 
             // Remove the message from the queue.
@@ -133,9 +128,9 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
     /**
      * Display the message to the user.
      */
-    const displayMessages = function() {
+    var displayMessages = function() {
         // If modal window is not currently displayed, check for queue messages.
-        for (const message in messageQueue) {
+        for (var message in messageQueue) {
             if (messageQueue[message].mode == 1) { // Display the message in a modal.
                 displayMessageModal(messageQueue[message]);
             } else if (messageQueue[message].mode == 2) { // Display the message as notification.
@@ -153,15 +148,15 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
     /**
      * Process user acknowledging the message.
      */
-    const acceptMessageModal = function() {
+    var acceptMessageModal = function() {
         modalObj.setBody(spinner);
-        let broadcastid = modalObj.footer[0].dataset.id;
+        var broadcastid = modalObj.footer[0].dataset.id;
         delete messageQueue[broadcastid];
 
         Ajax.call([{
             methodname: 'tool_broadcast_acknowledge_broadcast',
             args: {contextid: contextid, broadcastid: broadcastid}
-        }])[0].fail(() => {
+        }])[0].fail(function() {
             Notification.exception(new Error('Failed to acknowledge broadcast messages'));
         });
     };
@@ -169,19 +164,20 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
     /**
      * Process user acknowledging the message.
      */
-    const acceptMessageNotification = function(event) {
-        const elementName = event.target.tagName.toLowerCase();
-        if (elementName === 'button') { // Correct thing was clicked.
+    var acceptMessageNotification = function(event) {
+        var elementName = event.target.tagName.toLowerCase();
+        // Check correct thing was clicked.
+        if (elementName === 'button' && event.target.parentElement.parentElement.id == 'user-notifications') {
             // Get the ID of the notification
-            let notificationChildren = event.target.parentElement.childNodes;
-            for (let i = 0; i < notificationChildren.length; i++) {
+            var notificationChildren = event.target.parentElement.childNodes;
+            for (var i = 0; i < notificationChildren.length; i++) {
                 if ((notificationChildren[i].tagName !== undefined) && (notificationChildren[i].tagName.toLowerCase() === 'span')) {
-                    const broadcastid = notificationChildren[i].id.substring(28);
+                    var broadcastid = notificationChildren[i].id.substring(28);
                     delete messageQueue[broadcastid];
                     Ajax.call([{
                         methodname: 'tool_broadcast_acknowledge_broadcast',
                         args: {contextid: contextid, broadcastid: broadcastid}
-                    }])[0].fail(() => {
+                    }])[0].fail(function() {
                         Notification.exception(new Error('Failed to acknowledge broadcast messages'));
                     });
                 }
@@ -194,11 +190,11 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
      *
      * @private
      */
-    const createModal = function() {
-        return new Promise((resolve, reject) => {
-            Str.get_string('loading', 'tool_broadcast').then((title) => {
+    var createModal = function() {
+        return new Promise(function(resolve, reject) {
+            Str.get_string('loading', 'tool_broadcast').then(function(title) {
                 // Create the Modal.
-                let footerBtn = document.createElement('input');
+                var footerBtn = document.createElement('input');
                 footerBtn.type = 'button';
                 footerBtn.value = 'Acknowledge';
                 footerBtn.id = 'tool-broadcast-accept-broadcast';
@@ -211,9 +207,9 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
                     footer: footerBtn.outerHTML, // Mooodle 3.5 compatibility fix.
                     large: true
                 })
-                .done((modal) => {
+                .done(function(modal) {
                     modalObj = modal;
-                    modalObj.getRoot().on('click', '#tool-broadcast-accept-broadcast', (e) => {
+                    modalObj.getRoot().on('click', '#tool-broadcast-accept-broadcast', function(e) {
                         e.preventDefault();
                         modalObj.hide();
                     });
@@ -221,7 +217,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
                     resolve();
 
                 });
-            }).catch(() => {
+            }).catch(function() {
                 reject(new Error('Failed to load string: loading'));
             });
         });
@@ -235,20 +231,24 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
 
         // We don't want every user making ajax requests at the same time.
         // So we add some randomness to the check interval at creation time.
-        let min = 10000;
-        let max = 20000;
-        let interval = Math.floor(Math.random() * (max - min + 1)) + min;
+        var min = 10000;
+        var max = 20000;
+        var interval = Math.floor(Math.random() * (max - min + 1)) + min;
 
         // TODO: add chain for create modal then to check messages.
         createModal()
-        .then(() => {
+        .then(function() {
             checkMessages(); // Do an initial broadcast message check once things are loaded.
             setInterval(checkMessages, interval); // Check messages at a regular interval.
             setInterval(displayMessages, 5000); // Display messages at a regular interval, can be more frequent.
         })
-        .catch(() => {
+        .catch(function() {
             Notification.exception(new Error('Failed to create broadcast modal'));
         });
+
+        // Add event listener that will handle bootstrap click.
+        document.addEventListener('click', acceptMessageNotification);
+
     };
 
     return BroadcastModal;

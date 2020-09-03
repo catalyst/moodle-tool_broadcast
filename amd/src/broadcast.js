@@ -38,20 +38,20 @@ function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
     /**
      * Update the broadcast overview table with latest data.
      */
-    const updateBroadcastTable = function() {
-        let tableContainer = document.getElementById('tool-broadcast-table-container');
-        let loader = tableContainer.getElementsByClassName('overlay-icon-container')[0];
-        let tableElement = document.getElementById('tool-broadcast-table');
+    var updateBroadcastTable = function() {
+        var tableContainer = document.getElementById('tool-broadcast-table-container');
+        var loader = tableContainer.getElementsByClassName('overlay-icon-container')[0];
+        var tableElement = document.getElementById('tool-broadcast-table');
 
         loader.classList.remove('hide'); // Show loader if not already shown.
 
         Fragment.loadFragment('tool_broadcast', 'table', contextid)
-        .done((response) => {
+        .done(function(response) {
             tableElement.innerHTML = response;
             loader.classList.add('hide');
             tableEventListeners(); // Re-add table event listeners.
 
-        }).fail(() => {
+        }).fail(function() {
             Notification.exception(new Error('Failed to update table.'));
         });
     };
@@ -62,7 +62,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
      * @param {Object} formdata
      * @private
      */
-    const updateModalBody = function(formdata, broadcastid, action) {
+    var updateModalBody = function(formdata, broadcastid, action) {
         if (typeof formdata === "undefined") {
             formdata = {};
         }
@@ -75,17 +75,17 @@ function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
             action = '';
         }
 
-        let params = {
+        var params = {
             'jsonformdata': JSON.stringify(formdata),
             'broadcastid': broadcastid,
             'action': action
         };
 
-        Str.get_string('broadcastdetails', 'tool_broadcast').then((title) => {
+        Str.get_string('broadcastdetails', 'tool_broadcast').then(function(title) {
             modalObj.setTitle(title);
             modalObj.setBody(Fragment.loadFragment('tool_broadcast', 'new_base_form', contextid, params));
             return;
-        }).catch(() => {
+        }).catch(function() {
             Notification.exception(new Error('Failed to load string: broadcastdetails'));
         });
     };
@@ -96,17 +96,17 @@ function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
      * @param {Object} e
      * @private
      */
-    const processModalForm = function(e) {
+    var processModalForm = function(e) {
         e.preventDefault(); // Stop modal from closing.
 
         // Form data.
-        let copyform = modalObj.getRoot().find('form').serialize();
-        let formjson = JSON.stringify(copyform);
+        var copyform = modalObj.getRoot().find('form').serialize();
+        var formjson = JSON.stringify(copyform);
 
         // Handle invalid form fields for better UX.
-        let ariainvalid = modalObj.getRoot().find('[aria-invalid="true"]');
-        let errorclasses = modalObj.getRoot().find('.error');
-        let invalid;
+        var ariainvalid = modalObj.getRoot().find('[aria-invalid="true"]');
+        var errorclasses = modalObj.getRoot().find('.error');
+        var invalid;
 
         if (ariainvalid.length) {
             invalid = ariainvalid.concat(errorclasses);
@@ -121,12 +121,12 @@ function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
         Ajax.call([{
             methodname: 'tool_broadcast_submit_create_form',
             args: {jsonformdata: formjson}
-        }])[0].done(() => {
+        }])[0].done(function() {
             // For submission succeeded.
             modalObj.setBody(spinner);
             modalObj.hide();
             updateBroadcastTable();
-        }).fail(() => {
+        }).fail(function() {
             // Form submission failed server side, redisplay with errors.
             updateModalBody(copyform);
         });
@@ -138,8 +138,8 @@ function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
      *
      * @private
      */
-    const createModal = function() {
-        Str.get_string('loading', 'tool_broadcast').then((title) => {
+    var createModal = function() {
+        Str.get_string('loading', 'tool_broadcast').then(function(title) {
             // Create the Modal.
             ModalFactory.create({
                 type: ModalFactory.types.DEFAULT,
@@ -147,54 +147,54 @@ function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
                 body: spinner,
                 large: true
             })
-            .done((modal) => {
+            .done(function(modal) {
                 modalObj = modal;
                 // Explicitly handle form click events.
                 modalObj.getRoot().on('click', '#id_submitbutton', processModalForm);
-                modalObj.getRoot().on('click', '#id_cancel', (e) => {
+                modalObj.getRoot().on('click', '#id_cancel', function(e) {
                     e.preventDefault();
                     modalObj.setBody(spinner);
                     modalObj.hide();
                 });
             });
             return;
-        }).catch(() => {
+        }).catch(function() {
             Notification.exception(new Error('Failed to load string: loading'));
         });
     };
 
-    const displayModalForm = function() {
+    var displayModalForm = function() {
         updateModalBody();
         modalObj.show();
     };
 
-    const copyBroadcast = function(event) {
+    var copyBroadcast = function(event) {
         event.preventDefault();
-        const broadcastid = event.target.parentElement.id.substring(20);
+        var broadcastid = event.target.parentElement.id.substring(20);
         if (broadcastid != '') {
             updateModalBody({}, broadcastid, 'copy');
             modalObj.show();
         }
     };
 
-    const editBroadcast = function(event) {
+    var editBroadcast = function(event) {
         event.preventDefault();
-        const broadcastid = event.target.parentElement.id.substring(20);
+        var broadcastid = event.target.parentElement.id.substring(20);
         if (broadcastid != '') {
             updateModalBody({}, broadcastid, 'edit');
             modalObj.show();
         }
     };
 
-    const tableEventListeners = function() {
-        let edits = document.getElementsByClassName('action-icon edit');
-        let copies = document.getElementsByClassName('action-icon copy');
+    var tableEventListeners = function() {
+        var edits = document.getElementsByClassName('action-icon edit');
+        var copies = document.getElementsByClassName('action-icon copy');
 
-        for (let i = 0; i < edits.length; i++) {
+        for (var i = 0; i < edits.length; i++) {
             edits[i].addEventListener('click', editBroadcast);
         }
 
-        for (let i = 0; i < copies.length; i++) {
+        for (var i = 0; i < copies.length; i++) {
             copies[i].addEventListener('click', copyBroadcast);
         }
     };
@@ -204,7 +204,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
         createModal(); // Setup the initial Modal.
         tableEventListeners(); // Add the event listeners to action buttons in the table.
 
-        let createBroadcastButton = document.getElementById('local-broadcast-add-broadcast');
+        var createBroadcastButton = document.getElementById('local-broadcast-add-broadcast');
         createBroadcastButton.addEventListener('click', displayModalForm);
 
     };

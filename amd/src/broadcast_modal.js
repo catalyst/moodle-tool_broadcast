@@ -61,18 +61,19 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
      * everytime we poll, and prevent the user from being logged out due to inactivity.
      */
     const checkMessages = function() {
-        Ajax.call([{
-            methodname: 'tool_broadcast_check_broadcasts',
-            args: {contextid: contextid}
-        }], true, false)[0].done((response) => {
-            let responseObj = JSON.parse(response);
-            if (responseObj) { // We have messages.
-                getMessages();
-            }
-        }).fail(() => {
-            window.console.error(new Error('Failed to check broadcast messages'));
-        });
-
+        if (document.hasFocus()) {
+            Ajax.call([{
+                methodname: 'tool_broadcast_check_broadcasts',
+                args: {contextid: contextid}
+            }], true, false)[0].done((response) => {
+                let responseObj = JSON.parse(response);
+                if (responseObj) { // We have messages.
+                    getMessages();
+                }
+            }).fail(() => {
+                window.console.error(new Error('Failed to check broadcast messages'));
+            });
+        }
     };
 
     /**
@@ -134,20 +135,22 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
      * Display the message to the user.
      */
     const displayMessages = function() {
-        // If modal window is not currently displayed, check for queue messages.
-        for (const message in messageQueue) {
-            if (messageQueue[message].mode == 1) { // Display the message in a modal.
-                displayMessageModal(messageQueue[message]);
-            } else if (messageQueue[message].mode == 2) { // Display the message as notification.
-                displayMessageNotification(messageQueue[message]);
-            } else if (messageQueue[message].mode == 3) { // Display the message both ways.
-                displayMessageModal(messageQueue[message]);
-                displayMessageNotification(messageQueue[message]);
-            }
+        if (document.hasFocus()) {
+            // If modal window is not currently displayed, check for queue messages.
+            for (const message in messageQueue) {
+                if (messageQueue[message].mode == 1) { // Display the message in a modal.
+                    displayMessageModal(messageQueue[message]);
+                } else if (messageQueue[message].mode == 2) { // Display the message as notification.
+                    displayMessageNotification(messageQueue[message]);
+                } else if (messageQueue[message].mode == 3) { // Display the message both ways.
+                    displayMessageModal(messageQueue[message]);
+                    displayMessageNotification(messageQueue[message]);
+                }
 
-            // Exit the loop after showing one message.
-            break;
+                // Exit the loop after showing one message.
+                break;
             }
+        }
     };
 
     /**

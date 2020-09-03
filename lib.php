@@ -57,7 +57,7 @@ function tool_broadcast_output_fragment_new_base_form($args): string {
     $mform = new \tool_broadcast\output\create_form(null, $customdata,
         'post', '', array('class' => 'ignoredirty'), true, $formdata);
 
-    if (! empty($serialiseddata)) {
+    if (!empty($serialiseddata)) {
         // If we were passed non-empty form data we want the mform to call validation functions and show errors.
         $mform->is_validated();
     }

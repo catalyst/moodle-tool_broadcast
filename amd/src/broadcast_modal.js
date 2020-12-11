@@ -238,8 +238,8 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
 
         // We don't want every user making ajax requests at the same time.
         // So we add some randomness to the check interval at creation time.
-        let min = 10000;
-        let max = 20000;
+        let min = 45000;
+        let max = 60000;
         let interval = Math.floor(Math.random() * (max - min + 1)) + min;
 
         // TODO: add chain for create modal then to check messages.

@@ -39,7 +39,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
     /**
      * Set up tasks for all tests.
      */
-    protected function setUp() {
+    protected function setUp(): void {
         global $CFG;
 
         $this->resetAfterTest(true);
@@ -77,14 +77,14 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
         $formdata->activefrom = array(
             'day' => 11,
             'month' => 6,
-            'year' => 2020,
+            'year' => 2025,
             'hour' => 12,
             'minute' => 32
         );
         $formdata->expiry = array(
             'day' => 11,
             'month' => 6,
-            'year' => 2020,
+            'year' => 2025,
             'hour' => 13,
             'minute' => 32
         );

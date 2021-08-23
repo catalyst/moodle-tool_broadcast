@@ -8,10 +8,9 @@ This plugin allows sending of broadcast messages to users.
 
 This plugin current suports and is tested against the following versions of Moodle:
 
-* 3.5
-* 3.7
-* 3.8
 * 3.9
+* 3.10
+* 3.11
 
 ## Installation
 

@@ -251,5 +251,4 @@ class tool_broadcast_external extends external_api {
     public static function acknowledge_broadcast_returns() {
         return new external_value(PARAM_RAW, 'JSON response.');
     }
-
 }

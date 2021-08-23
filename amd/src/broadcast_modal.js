@@ -101,7 +101,6 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
     const displayMessageNotification = function(message) {
         const containerid = 'tool-broadcast-notification-' + message.id;
         const existingContainer = document.getElementById(containerid);
-        //window.console.log(document.getElementById(containerid));
 
         if (existingContainer === null) {
             let container = document.createElement('span');
@@ -119,10 +118,12 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
             Notification.addNotification({
                 message: container.outerHTML,
                 type: 'warn'
-            })
-            .then(() => {
+            }).then(() => {
                 let notificationContainer = document.getElementById('user-notifications');
                 notificationContainer.addEventListener('click', acceptMessageNotification);
+                return;
+            }).catch(() => {
+                window.console.error(new Error('Failed to get broadcast message'));
             });
 
             // Remove the message from the queue.
@@ -171,6 +172,8 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
 
     /**
      * Process user acknowledging the message.
+     *
+     * @param {Event} event The event.
      */
     const acceptMessageNotification = function(event) {
         const elementName = event.target.tagName.toLowerCase();
@@ -196,6 +199,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
      * Create the modal window.
      *
      * @private
+     * @returns {Promise}
      */
     const createModal = function() {
         return new Promise((resolve, reject) => {
@@ -224,6 +228,8 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
                     resolve();
 
                 });
+
+                return;
             }).catch(() => {
                 reject(new Error('Failed to load string: loading'));
             });
@@ -232,6 +238,8 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
 
     /**
      * Initiliase the modal display and associated listeners.
+     *
+     * @param {Object} context
      */
     BroadcastModal.init = function(context) {
         contextid = context;
@@ -248,6 +256,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
             checkMessages(); // Do an initial broadcast message check once things are loaded.
             setInterval(checkMessages, interval); // Check messages at a regular interval.
             setInterval(displayMessages, 5000); // Display messages at a regular interval, can be more frequent.
+            return;
         })
         .catch(() => {
             Notification.exception(new Error('Failed to create broadcast modal'));

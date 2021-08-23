@@ -36,7 +36,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
     /**
      * Set up tasks for all tests.
      */
-    protected function setUp() {
+    protected function setUp(): void {
         $this->resetAfterTest(true);
     }
 

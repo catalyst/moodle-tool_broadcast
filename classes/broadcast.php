@@ -294,7 +294,7 @@ class broadcast {
                 // and the rollback method thorws an exception, hence the catch.
                 $e = new \Exception('Can not acknowledge broadcast');
                 $transaction->rollback($e);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 return;
             }
         }

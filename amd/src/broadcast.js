@@ -60,6 +60,8 @@ function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
      * Updates the body of the modal window.
      *
      * @param {Object} formdata
+     * @param {number} broadcastid
+     * @param {string} action
      * @private
      */
     const updateModalBody = function(formdata, broadcastid, action) {

@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/catalyst/moodle-tool_broadcast.svg?branch=master)](https://travis-ci.org/catalyst/moodle-tool_broadcast)
-
 # Broadcast message #
 
 This plugin allows sending of broadcast messages to users.

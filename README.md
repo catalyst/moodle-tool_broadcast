@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/catalyst/moodle-tool_broadcast.svg?branch=master)](https://travis-ci.org/catalyst/moodle-tool_broadcast)
+![Build Status](https://github.com/catalyst/moodle-tool_broadcast/actions/workflows/moodle-ci.yml/badge.svg?branch=master)
 
 # Broadcast message #
 

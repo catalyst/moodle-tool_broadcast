@@ -134,7 +134,7 @@ class broadcast {
                 'text' => $broadcast->body,
                 'format' => $broadcast->bodyformat
             ),
-            'activefrom ' => array(
+            'activefrom' => array(
                 'day' => date('d', $broadcast->timestart),
                 'month' => date('n', $broadcast->timestart),
                 'year' => date('Y', $broadcast->timestart),

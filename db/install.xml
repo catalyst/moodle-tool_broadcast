@@ -11,7 +11,7 @@
         <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The title of the message"/>
         <FIELD NAME="body" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The body of the message"/>
         <FIELD NAME="bodyformat" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="The format of the body text. HTML etc."/>
-        <FIELD NAME="loggedin" TYPE="binary" NOTNULL="true" SEQUENCE="false" COMMENT="If true then this broadcast message will only be sent to users who were logged in at the time of broadcast creation."/>
+        <FIELD NAME="loggedin" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="If true then this broadcast message will only be sent to users who were logged in at the time of broadcast creation."/>
         <FIELD NAME="mode" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="The mode of message delivery.
 1 = modal
 2 = Bootstrap notification

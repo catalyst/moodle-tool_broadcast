@@ -1,3 +1,5 @@
+![Build Status](https://github.com/catalyst/moodle-tool_broadcast/actions/workflows/moodle-ci.yml/badge.svg?branch=master)
+
 # Broadcast message #
 
 This plugin allows sending of broadcast messages to users.

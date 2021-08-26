@@ -58,7 +58,7 @@ function xmldb_tool_broadcast_upgrade($oldversion) {
         // Ok, the 'loggedin' column is a byte and we really want this to be an int. However using 'change_field_type'
         // directly results in "ERROR: column "loggedin" cannot be cast automatically to type bigint". So, let's create
         // a field we can store the data of 'loggedin' in.
-        $addfield = new xmldb_field('loggedin2', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+        $addfield = new xmldb_field('loggedin2', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0);
         if (!$dbman->field_exists($table, $addfield)) {
             $dbman->add_field($table, $addfield);
         }

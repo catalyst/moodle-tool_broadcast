@@ -49,5 +49,40 @@ function xmldb_tool_broadcast_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2020061800, 'tool', 'broadcast');
     }
 
+    if ($oldversion < 2021082500) {
+        global $DB;
+
+        // Define table to be modified.
+        $table = new xmldb_table('tool_broadcast');
+
+        // Ok, the 'loggedin' column is a byte and we really want this to be an int. However using 'change_field_type'
+        // directly results in "ERROR: column "loggedin" cannot be cast automatically to type bigint". So, let's create
+        // a field we can store the data of 'loggedin' in.
+        $addfield = new xmldb_field('loggedin2', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0);
+        if (!$dbman->field_exists($table, $addfield)) {
+            $dbman->add_field($table, $addfield);
+        }
+
+        if ($broadcasts = $DB->get_records('tool_broadcast')) {
+            foreach ($broadcasts as $broadcast) {
+                $updatedata = new stdClass();
+                $updatedata->id = $broadcast->id;
+                $updatedata->loggedin2 = (int) $broadcast->loggedin;
+
+                $DB->update_record('tool_broadcast', $updatedata);
+            }
+        }
+
+        // Delete the 'loggedin' field.
+        $deletefield = new xmldb_field('loggedin');
+        $dbman->drop_field($table, $deletefield);
+
+        // Rename the 'loggedin2' field to 'loggedin'.
+        $dbman->rename_field($table, $addfield, 'loggedin');
+
+        // Broadcast savepoint reached.
+        upgrade_plugin_savepoint(true, 2021082500, 'tool', 'broadcast');
+    }
+
     return true;
 }

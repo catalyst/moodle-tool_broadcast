@@ -183,17 +183,18 @@ class broadcast {
             $now = time();
         }
 
-        list($insql, $inparams) = $DB->get_in_or_equal($parentcontexts);
+        list($insql, $inparams) = $DB->get_in_or_equal($parentcontexts, SQL_PARAMS_NAMED);
         $sql = "SELECT b.id, b.title, b.body, b.loggedin, b.timestart, b.mode
                   FROM {tool_broadcast} b
-             LEFT JOIN {tool_broadcast_users} bu ON b.id = bu.broadcastid
+             LEFT JOIN {tool_broadcast_users} bu
+                    ON b.id = bu.broadcastid AND bu.userid = :userid
                  WHERE b.contextid $insql
-                       AND bu.userid is NULL
-                       AND b.timestart < ?
-                       AND b.timeend > ?
-                   ";
-        $inparams[] = $now; // Timestart var.
-        $inparams[] = $now; // Timeend var.
+                   AND bu.id IS NULL
+                   AND b.timestart < :timestart
+                   AND b.timeend > :timeend";
+        $inparams['userid'] = $userid;
+        $inparams['timestart'] = $now;
+        $inparams['timeend'] = $now;
 
         $records = $DB->get_records_sql($sql, $inparams);
 
@@ -228,17 +229,18 @@ class broadcast {
             $now = time();
         }
 
-        list($insql, $inparams) = $DB->get_in_or_equal($parentcontexts);
+        list($insql, $inparams) = $DB->get_in_or_equal($parentcontexts, SQL_PARAMS_NAMED);
         $sql = "SELECT b.id, b.loggedin, b.timestart
                   FROM {tool_broadcast} b
-             LEFT JOIN {tool_broadcast_users} bu ON b.id = bu.broadcastid
+             LEFT JOIN {tool_broadcast_users} bu
+                    ON b.id = bu.broadcastid AND bu.userid = :userid
                  WHERE b.contextid $insql
-                       AND bu.userid is NULL
-                       AND b.timestart < ?
-                       AND b.timeend > ?
-                   ";
-        $inparams[] = $now; // Timestart var.
-        $inparams[] = $now; // Timeend var.
+                   AND bu.id IS NULL
+                   AND b.timestart < :timestart
+                   AND b.timeend > :timeend";
+        $inparams['userid'] = $userid;
+        $inparams['timestart'] = $now;
+        $inparams['timeend'] = $now;
 
         $records = $DB->get_records_sql($sql, $inparams);
 

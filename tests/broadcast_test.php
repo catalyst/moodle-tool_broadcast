@@ -349,8 +349,8 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         );
         $formdata->scopesite = 2;
         $formdata->courses = $course->id;
-        $formdata->activefrom = 1591842960;
-        $formdata->expiry = 1591846560;
+        $formdata->activefrom = 1628664900;
+        $formdata->expiry = 1630302840;
         $formdata->loggedin = 1;
         $formdata->mode = 1;
 
@@ -362,7 +362,16 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
 
         $this->assertEquals($formdata->title, $broadcast['title']);
         $this->assertEquals($formdata->message['text'], $broadcast['message']['text']);
+        $this->assertEquals($formdata->scopesite, $broadcast['scopesite']);
         $this->assertEquals($course->id, $broadcast['courses']);
+        $this->assertEquals(date('d', $formdata->activefrom), $broadcast['activefrom']['day']);
+        $this->assertEquals(date('n', $formdata->activefrom), $broadcast['activefrom']['month']);
+        $this->assertEquals(date('Y', $formdata->activefrom), $broadcast['activefrom']['year']);
+        $this->assertEquals(date('d', $formdata->expiry), $broadcast['expiry']['day']);
+        $this->assertEquals(date('n', $formdata->expiry), $broadcast['expiry']['month']);
+        $this->assertEquals(date('Y', $formdata->expiry), $broadcast['expiry']['year']);
+        $this->assertEquals($formdata->loggedin, $broadcast['loggedin']);
+        $this->assertEquals($formdata->mode, $broadcast['mode']);
     }
 
     /**

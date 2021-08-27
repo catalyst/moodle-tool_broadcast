@@ -261,6 +261,46 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
     }
 
     /**
+     * Test checking for broadcast messages when an admin has already acknowledged them.
+     */
+    public function test_get_broadcasts_as_student_after_admin_ack() {
+        // Create a course with activity.
+        $generator = $this->getDataGenerator();
+
+        $admin = get_admin();
+        $student = $generator->create_user();
+
+        // Mock up the form data for use in tests.
+        $formdata = new \stdClass;
+        $formdata->contextid = context_system::instance()->id;
+        $formdata->title = 'New broadcast';
+        $formdata->message = [
+            'text' => '<p dir="ltr" style="text-align: left;">one <strong>two </strong>threee<br></p>',
+            'format' => 1
+        ];
+        $formdata->activefrom = 1628664900;
+        $formdata->expiry = 1630302840;
+        $formdata->loggedin = 0;
+        $formdata->mode = 1;
+
+        $broadcast = new \tool_broadcast\broadcast();
+        $broadcast->create_broadcast($formdata);
+
+        $now = 1629875917;
+        $broadcasts = $broadcast->get_broadcasts(context_system::instance()->id, $admin->id, $now);
+        $this->assertCount(1, $broadcasts);
+
+        $broadcastdbdata = reset($broadcasts);
+
+        $broadcast = new \tool_broadcast\broadcast();
+        $broadcast->acknowledge_broadcast($broadcastdbdata->id, context_system::instance()->id, $admin->id);
+
+        $broadcasts = $broadcast->get_broadcasts(context_system::instance()->id, $student->id, $now);
+
+        $this->assertCount(1, $broadcasts);
+    }
+
+    /**
      * Test acknowledging broadcast messages.
      */
     public function test_acknowledge_broadcast() {

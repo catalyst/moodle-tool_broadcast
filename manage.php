@@ -40,8 +40,16 @@ require_login($course, false);
 $context = context_course::instance($course->id);
 require_capability('tool/broadcast:createbroadcasts', $context);
 
-if ($action == 'delete') {
+if ($action == 'delete' && confirm_sesskey()) {
     $broadcast = new \tool_broadcast\broadcast();
+
+    \core\notification::add(
+        get_string('broadcastdeleted', 'tool_broadcast', [
+            'name' => $broadcast->get_broadcast_name($broadcastid),
+        ]),
+      \core\notification::INFO
+    );
+
     $broadcast->delete_broadcast($broadcastid);
     redirect($url);
 }

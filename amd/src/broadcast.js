@@ -49,7 +49,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
         .done((response) => {
             tableElement.innerHTML = response;
             loader.classList.add('hide');
-            tableEventListeners(); // Re-add table event listeners.
+            registerEventListeners(); // Re-add table event listeners.
 
         }).fail(() => {
             Notification.exception(new Error('Failed to update table.'));
@@ -188,23 +188,49 @@ function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
         }
     };
 
-    const tableEventListeners = function() {
-        let edits = document.getElementsByClassName('action-icon edit');
-        let copies = document.getElementsByClassName('action-icon copy');
-
-        for (let i = 0; i < edits.length; i++) {
-            edits[i].addEventListener('click', editBroadcast);
+    const displayDeleteConfirmation = clickedLink => Notification.confirm(
+        // Title.
+        clickedLink.dataset.confirmationTitle,
+        // Question.
+        clickedLink.dataset.confirmationQuestion,
+        // Yes button text.
+        clickedLink.dataset.confirmationYesText,
+        // No button text.
+        clickedLink.dataset.confirmationNoText,
+        () => {
+            // Yes callback.
+            window.location.href = clickedLink.href;
+        },
+        () => {
+            // Cancel callback.
+            return;
         }
+    );
 
-        for (let i = 0; i < copies.length; i++) {
-            copies[i].addEventListener('click', copyBroadcast);
-        }
+    const registerEventListeners = () => {
+        document.addEventListener('click', e => {
+            const clickedLink = e.target.closest('.action-icon');
+
+            if (!clickedLink) {
+                return;
+            }
+
+            e.preventDefault();
+
+            if (clickedLink.classList.contains('delete')) {
+                displayDeleteConfirmation(clickedLink);
+            } else if (clickedLink.classList.contains('edit')) {
+                editBroadcast(e);
+            } else if (clickedLink.classList.contains('copy')) {
+                copyBroadcast(e);
+            }
+        });
     };
 
     Broadcast.init = function(context) {
         contextid = context;
         createModal(); // Setup the initial Modal.
-        tableEventListeners(); // Add the event listeners to action buttons in the table.
+        registerEventListeners(); // Add the event listeners to action buttons in the table.
 
         let createBroadcastButton = document.getElementById('local-broadcast-add-broadcast');
         createBroadcastButton.addEventListener('click', displayModalForm);

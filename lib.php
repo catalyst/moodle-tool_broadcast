@@ -25,6 +25,43 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
+ * Adds a manage broadcast link to the course admin menu.
+ *
+ * @param navigation_node $navigation The navigation node to extend
+ * @param stdClass $course The course to object for the tool
+ * @param context $coursecontext The context of the course
+ * @return void|null return null if we don't want to display the node.
+ */
+function tool_broadcast_extend_navigation_course($navigation, $course, $coursecontext) {
+    global $PAGE;
+
+    // Only add this settings item on non-site course pages.
+    if (!$PAGE->course || $PAGE->course->id == SITEID) {
+        return null;
+    }
+
+    if (!has_capability('tool/broadcast:createbroadcasts', $coursecontext)) {
+        return null;
+    }
+
+    $url = new moodle_url('/admin/tool/broadcast/manage.php', ['id' => $course->id]);
+    $pluginname = get_string('pluginname', 'tool_broadcast');
+    $node = navigation_node::create(
+        $pluginname,
+        $url,
+        navigation_node::NODETYPE_LEAF,
+        'tool_broadcast',
+        'tool_broadcast'
+    );
+
+    if ($PAGE->url->compare($url, URL_MATCH_BASE)) {
+        $node->make_active();
+    }
+
+    $navigation->add_node($node);
+}
+
+/**
  * Renders the broadcast form for the modal on the broadcast management screen.
  *
  * @param array $args
@@ -90,7 +127,6 @@ function tool_broadcast_output_fragment_table($args): string {
 
     return $o;
 }
-
 
 /**
  * Adds required JS and startup values for broadcast Modals.

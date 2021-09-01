@@ -44,10 +44,11 @@ class create_form extends \moodleform {
      * @see \moodleform::definition()
      */
     public function definition() {
-        global $CFG;
-
         $mform = $this->_form;
         $mform->disable_form_change_checker();
+
+        $canaddatsite = has_capability('tool/broadcast:createbroadcasts', \context_system::instance());
+        $categories = \core_course_category::make_categories_list('tool/broadcast:createbroadcasts');
 
         $contextid = $this->_customdata['contextid'];
 
@@ -102,22 +103,28 @@ class create_form extends \moodleform {
         $mform->setType('message', PARAM_RAW);
 
         // Scope settings.
-        $scopesite = array(
-            0 => get_string('scopesite:site', 'tool_broadcast'),
-            1 => get_string('scopesite:category', 'tool_broadcast'),
-            2 => get_string('scopesite:course', 'tool_broadcast')
-        );
+        $scopesite = [];
+        if ($canaddatsite) {
+            $scopesite[0] = get_string('scopesite:site', 'tool_broadcast');
+        }
+        if (!empty($categories)) {
+            $scopesite[1] = get_string('scopesite:category', 'tool_broadcast');
+        }
+        $scopesite[2] = get_string('scopesite:course', 'tool_broadcast');
+
         $mform->addElement('select', 'scopesite', get_string('scopesite', 'tool_broadcast'), $scopesite);
         $mform->addHelpButton('scopesite', 'scopesite', 'tool_broadcast');
 
-        $categories = \core_course_category::make_categories_list('tool/broadcast:createbroadcasts');
-        $categoryoptions = array(
-            'multiple' => false,
-            'placeholder' => get_string('findcategory', 'tool_broadcast'),
-            'noselectionstring' => get_string('findcategory', 'tool_broadcast'),
-        );
-        $mform->addElement('autocomplete', 'categories', get_string('categories', 'tool_broadcast'), $categories, $categoryoptions);
-        $mform->hideIf('categories', 'scopesite', 'ne', 1);
+        if (!empty($categories)) {
+            $categoryoptions = array(
+                'multiple' => false,
+                'placeholder' => get_string('findcategory', 'tool_broadcast'),
+                'noselectionstring' => get_string('findcategory', 'tool_broadcast'),
+            );
+            $mform->addElement('autocomplete', 'categories', get_string('categories', 'tool_broadcast'),
+                $categories, $categoryoptions);
+            $mform->hideIf('categories', 'scopesite', 'ne', 1);
+        }
 
         $broadcast = new \tool_broadcast\broadcast();
         $courses = $broadcast->get_courses();

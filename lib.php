@@ -44,7 +44,7 @@ function tool_broadcast_extend_navigation_course($navigation, $course, $courseco
         return null;
     }
 
-    $url = new moodle_url('/admin/tool/broadcast/manage.php', ['id' => $course->id]);
+    $url = new moodle_url('/admin/tool/broadcast/manage.php', ['id' => $coursecontext->id]);
     $pluginname = get_string('pluginname', 'tool_broadcast');
     $node = navigation_node::create(
         $pluginname,
@@ -120,7 +120,7 @@ function tool_broadcast_output_fragment_table($args): string {
     $context = $args['context'];
     require_capability('tool/broadcast:createbroadcasts', $context);
 
-    $baseurl = $CFG->wwwroot . '/admin/tool/broadcast/manage.php';
+    $baseurl = new moodle_url('admin/tool/broadcast/manage.php', ['id' => $context->id]);
     $output = $PAGE->get_renderer('tool_broadcast');
 
     $o = $output->render_message_table($baseurl, 0);
@@ -134,7 +134,7 @@ function tool_broadcast_output_fragment_table($args): string {
 function tool_broadcast_before_footer(): void {
     global $PAGE;
     $context = $PAGE->context;
-    $createurl = new moodle_url('/admin/tool/broadcast/manage.php', array('id' => 1));
+    $createurl = new moodle_url('/admin/tool/broadcast/manage.php', ['id' => context_system::instance()->id]);
     $createpage = $PAGE->url->compare($createurl);
 
     // Only include the required JS on this page if user has the required capability to view messages.

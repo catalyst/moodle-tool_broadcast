@@ -207,13 +207,17 @@ class broadcast_table extends table_sql implements renderable {
         $icon = $OUTPUT->render(new \pix_icon('t/copy', get_string('duplicatebroadcast', 'tool_broadcast')));
         $manage .= \html_writer::link('#', $icon, array('class' => 'action-icon copy', 'id' => 'tool-broadcast-copy-' . $row->id));
 
-        $deleteurl = new \moodle_url('/admin/tool/broadcast/manage.php', array('broadcastid' => $row->id,
-            'action' => 'delete', 'sesskey' => sesskey()));
+        $deleteurl = new \moodle_url('/admin/tool/broadcast/manage.php',
+            [
+                'id' => $row->contextid,
+                'broadcastid' => $row->id,
+                'action' => 'delete',
+                'sesskey' => sesskey()
+            ]
+        );
         $icon = $OUTPUT->render(new \pix_icon('t/delete', get_string('deletebroadcast', 'tool_broadcast')));
         $manage .= \html_writer::link($deleteurl, $icon, [
             'class' => 'action-icon delete',
-            'data-confirmation-cancel-target' =>
-                (new \moodle_url('/admin/tool/broadcast/manage.php', ['id' => $row->contextid]))->out(false),
             'data-confirmation-title' => get_string('deleteconfirm', 'tool_broadcast'),
             'data-confirmation-question' => get_string('deletebroadcastconfirm', 'tool_broadcast'),
             'data-confirmation-yes-text' => get_string('yes'),

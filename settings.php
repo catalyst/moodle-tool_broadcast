@@ -29,7 +29,7 @@ if ($hassiteconfig) {
 
     $workflowsettings = new admin_externalpage('tool_broadcast_broadcastsettings',
         get_string('manage', 'tool_broadcast'),
-        new moodle_url('/admin/tool/broadcast/manage.php'));
+        new moodle_url('/admin/tool/broadcast/manage.php', ['id' => context_system::instance()->id]));
 
     $ADMIN->add('tool_broadcast', $workflowsettings);
 

@@ -34,7 +34,13 @@ $pageurl = new moodle_url('/admin/tool/broadcast/manage.php', ['id' => $contexti
 
 // Security and access checks.
 $context = context::instance_by_id($contextid);
-require_login();
+
+// Pass the course id to require_login() if we are in a course to set up the navbar appropriately.
+if ($context->contextlevel == CONTEXT_COURSE) {
+    require_login($context->instanceid);
+} else {
+    require_login();
+}
 require_capability('tool/broadcast:createbroadcasts', $context);
 
 if ($action == 'delete' && confirm_sesskey()) {
@@ -55,7 +61,6 @@ if ($action == 'delete' && confirm_sesskey()) {
 
 $PAGE->set_url($pageurl);
 $PAGE->set_context($context);
-$PAGE->set_pagelayout('admin');
 $PAGE->set_title(get_string('manage', 'tool_broadcast'));
 $PAGE->set_heading(get_string('manage', 'tool_broadcast'));
 

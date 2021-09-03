@@ -215,6 +215,10 @@ function(Str, ModalFactory, ModalEvents, Ajax, Fragment, Notification) {
                 return;
             }
 
+            if (clickedLink.classList.contains('report')) {
+                return;
+            }
+
             e.preventDefault();
 
             if (clickedLink.classList.contains('delete')) {

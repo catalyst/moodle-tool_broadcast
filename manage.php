@@ -70,6 +70,5 @@ $PAGE->requires->js_call_amd('tool_broadcast/broadcast', 'init', array($contexti
 // Build the page output.
 echo $OUTPUT->header();
 $output = $PAGE->get_renderer('tool_broadcast');
-echo $output->render_content($pageurl, $page);
-
+echo $output->render_content($context, $pageurl, $page);
 echo $OUTPUT->footer();

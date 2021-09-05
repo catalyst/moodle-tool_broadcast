@@ -60,13 +60,14 @@ class renderer extends \plugin_renderer_base {
     /**
      * Render the HTML for the message management table.
      *
+     * @param \context $context The context we are displaying broadcasts for
      * @param string $baseurl the base url to render the table on.
      * @param int $page the page number for pagination.
      *
      * @return string $output HTML for the table.
      */
-    public function render_message_table(string $baseurl, int $page = 0) {
-        $renderable = new broadcast_table('tool_broadcast', $baseurl, $page);
+    public function render_message_table(\context $context, string $baseurl, int $page = 0) {
+        $renderable = new broadcast_table($context, 'tool_broadcast', $baseurl, $page);
         $perpage = 50;
         ob_start();
         $renderable->out($perpage, true);
@@ -104,17 +105,17 @@ class renderer extends \plugin_renderer_base {
     /**
      * Main method that renders page content.
      *
+     * @param \context $context The context we are displaying broadcasts for
      * @param string $baseurl Base url for table.
      * @param int $page The page to display.
      * @return string Rendered HTML.
      */
-    public function render_content(string $baseurl, int $page = 0): string {
-
+    public function render_content(\context $context, string $baseurl, int $page = 0): string {
         $html = $this->render_add_button();
         $html .= \html_writer::start_div('tool-broadcast-table-container', array('id' => 'tool-broadcast-table-container'));
         $html .= $this->get_loader();
         $html .= \html_writer::start_div('tool-broadcast-table', array('id' => 'tool-broadcast-table'));
-        $html .= $this->render_message_table($baseurl, $page);
+        $html .= $this->render_message_table($context, $baseurl, $page);
         $html .= \html_writer::end_div();
         $html .= \html_writer::end_div();
 

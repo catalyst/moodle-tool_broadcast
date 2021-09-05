@@ -154,7 +154,7 @@ function tool_broadcast_output_fragment_table($args): string {
     $baseurl = new moodle_url('admin/tool/broadcast/manage.php', ['id' => $context->id]);
     $output = $PAGE->get_renderer('tool_broadcast');
 
-    $o = $output->render_message_table($baseurl, 0);
+    $o = $output->render_message_table($context, $baseurl, 0);
 
     return $o;
 }

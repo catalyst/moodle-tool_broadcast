@@ -41,16 +41,24 @@ use \renderable;
 class broadcast_table extends table_sql implements renderable {
 
     /**
+     * @var \context The context we are displaying broadcasts for
+     */
+    public $context;
+
+    /**
      * report_table constructor.
      *
+     * @param \context $context The context we are displaying broadcasts for
      * @param string $uniqueid Unique id of table.
      * @param string $baseurl the base url to render this report on.
      * @param int $page the page number for pagination.
      *
      * @throws \coding_exception
      */
-    public function __construct(string $uniqueid, string $baseurl, int $page = 0) {
+    public function __construct(\context $context, string $uniqueid, string $baseurl, int $page = 0) {
         parent::__construct($uniqueid);
+
+        $this->context = $context;
 
         $this->set_attribute('id', 'tool_broadcast_broadcast_table');
         $this->set_attribute('class', 'generaltable generalbox');
@@ -244,15 +252,21 @@ class broadcast_table extends table_sql implements renderable {
 
         $countsql = "SELECT COUNT(1) FROM {tool_broadcast}";
         $sql = "SELECT * FROM {tool_broadcast}";
+        $params = [];
+
+        if ($this->context != \context_system::instance()) {
+            $sql .= " WHERE contextid = :contextid";
+            $params['contextid'] = $this->context->id;
+        }
 
         if (!empty($sort)) {
             $sql .= " ORDER BY $sort";
         }
 
-        $total = $DB->count_records_sql($countsql);
+        $total = $DB->count_records_sql($countsql, $params);
         $this->pagesize($pagesize, $total);
 
-        $records = $DB->get_records_sql($sql, array(), $this->get_page_start(), $this->get_page_size());
+        $records = $DB->get_records_sql($sql, $params, $this->get_page_start(), $this->get_page_size());
 
         $this->rawdata = $records;
 

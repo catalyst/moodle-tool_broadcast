@@ -28,8 +28,9 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
 
-use \table_sql;
+use \core_user\fields;
 use \renderable;
+use \table_sql;
 
 
 /**
@@ -93,9 +94,9 @@ class ackreport_table extends table_sql implements renderable {
         $headers[] = get_string('fullname');
         $columns[] = 'fullname';
 
-        $extrafields = get_extra_user_fields($context);
+        $extrafields = fields::get_identity_fields($context);
         foreach ($extrafields as $field) {
-            $headers[] = get_user_field_name($field);
+            $headers[] = fields::get_display_name($field);
             $columns[] = $field;
         }
 

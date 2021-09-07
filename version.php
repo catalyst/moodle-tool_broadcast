@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'tool_broadcast';
-$plugin->release = '2020061800';
-$plugin->version = 2021082500;
-$plugin->requires = 2020061500; // Requires this Moodle version (3.9).
-$plugin->maturity = MATURITY_ALPHA;
+$plugin->release = '2021090700';
+$plugin->version = 2021090700;
+$plugin->requires = 2021051700; // Requires this Moodle version (3.11).
+$plugin->maturity = MATURITY_STABLE;

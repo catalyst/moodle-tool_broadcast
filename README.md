@@ -8,9 +8,10 @@ This plugin allows sending of broadcast messages to users.
 
 This plugin currently supports and is tested against the following versions of Moodle:
 
-* 3.9
-* 3.10
-* 3.11
+| Moodle version     | Branch      |
+| ----------------- | ----------- |
+| Moodle 3.9 to 3.10 | MOODLE_39_STABLE |
+| Moodle 3.11 | MOODLE_311_STABLE |
 
 ## Installation
 
@@ -18,7 +19,7 @@ You can install this plugin from the plugin directory or get the latest version
 on GitHub.
 
 ```bash
-git clone https://github.com/catalyst/moodle-tool_broadcast admin/tool/broadcast
+git clone -b <branch> https://github.com/catalyst/moodle-tool_broadcast admin/tool/broadcast
 ```
 
 # Using the plugin

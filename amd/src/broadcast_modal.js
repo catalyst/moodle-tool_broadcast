@@ -30,6 +30,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
      */
     var BroadcastModal = {};
     var contextid;
+    var userid;
     var modalObj;
     const spinner = '<p class="text-center">'
         + '<i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>'
@@ -64,7 +65,7 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
         if (document.hasFocus()) {
             Ajax.call([{
                 methodname: 'tool_broadcast_check_broadcasts',
-                args: {contextid: contextid}
+                args: {contextid: contextid, userid: userid}
             }], true, false)[0].done((response) => {
                 let responseObj = JSON.parse(response);
                 if (responseObj) { // We have messages.
@@ -239,10 +240,12 @@ function(Str, ModalFactory, ModalEvents, Ajax, Notification) {
     /**
      * Initiliase the modal display and associated listeners.
      *
-     * @param {Object} context
+     * @param {number} context
+     * @param {number} user
      */
-    BroadcastModal.init = function(context) {
+    BroadcastModal.init = function(context, user) {
         contextid = context;
+        userid = user;
 
         // We don't want every user making ajax requests at the same time.
         // So we add some randomness to the check interval at creation time.

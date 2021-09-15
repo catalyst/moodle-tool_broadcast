@@ -140,7 +140,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
 
         $assign = new assign(context_module::instance($assignrow->cmid), false, false);
         $user = $generator->create_user();
-        $user->lastlogin = 1591842950;
+        $user->currentlogin = 1591842950;
 
         $DB->update_record('user', $user);
 
@@ -183,7 +183,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $broadcasts = $broadcast->get_broadcasts($contextassignid, $user->id, $now);
         $this->assertEmpty($broadcasts); // No broadcasts as end time is in the past.
 
-        $user->lastlogin = 1591842970;
+        $user->currentlogin = 1591842970;
         $DB->update_record('user', $user);
         $now = 1591842970;
         $broadcasts = $broadcast->get_broadcasts($contextassignid, $user->id, $now);
@@ -207,7 +207,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
 
         $assign = new assign(context_module::instance($assignrow->cmid), false, false);
         $user = $generator->create_user();
-        $user->lastlogin = 1591842950;
+        $user->currentlogin = 1591842950;
 
         $DB->update_record('user', $user);
 
@@ -252,7 +252,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
         $broadcasts = $broadcast->check_broadcasts($contextassignid, $user->id, $now);
         $this->assertFalse($broadcasts); // False as time end is in the past.
 
-        $user->lastlogin = 1591842970;
+        $user->currentlogin = 1591842970;
         $DB->update_record('user', $user);
         $now = 1591842970;
         $broadcasts = $broadcast->check_broadcasts($contextassignid, $user->id, $now);
@@ -315,7 +315,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
 
         $assign = new assign(context_module::instance($assignrow->cmid), false, false);
         $user = $generator->create_user();
-        $user->lastlogin = time() - 1000;
+        $user->currentlogin = time() - 1000;
 
         // Enrol user into the course.
         $generator->enrol_user($user->id, $course->id, 'student');
@@ -371,7 +371,7 @@ class tool_broadcast_broadcast_testcase extends advanced_testcase {
 
         $assign = new assign(context_module::instance($assignrow->cmid), false, false);
         $user = $generator->create_user();
-        $user->lastlogin = time() - 1000;
+        $user->currentlogin = time() - 1000;
 
         // Enrol user into the course.
         $generator->enrol_user($user->id, $course->id, 'student');

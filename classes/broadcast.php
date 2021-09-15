@@ -201,8 +201,8 @@ class broadcast {
         foreach ($records as $record) {
             // Filter broadcasts limited to users who are logged in at the time of the message becoming active.
             if ($record->loggedin == 1) {
-                $lastlogin = $DB->get_field('user', 'lastlogin', array('id' => $userid), MUST_EXIST);
-                if ($lastlogin > $record->timestart) {
+                $currentlogin = $DB->get_field('user', 'currentlogin', array('id' => $userid), MUST_EXIST);
+                if ($currentlogin > $record->timestart) {
                     unset ($records[$record->id]);
                 }
             }
@@ -243,12 +243,11 @@ class broadcast {
         $inparams['timeend'] = $now;
 
         $records = $DB->get_records_sql($sql, $inparams);
-
         foreach ($records as $record) {
             // Filter broadcasts limited to users who are logged in at the time of the message becoming active.
             if ($record->loggedin == 1) {
-                $lastlogin = $DB->get_field('user', 'lastlogin', array('id' => $userid), MUST_EXIST);
-                if ($lastlogin > $record->timestart) {
+                $currentlogin = $DB->get_field('user', 'currentlogin', array('id' => $userid), MUST_EXIST);
+                if ($currentlogin > $record->timestart) {
                     unset ($records[$record->id]);
                 }
             }

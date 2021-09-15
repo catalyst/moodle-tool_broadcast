@@ -165,7 +165,8 @@ class tool_broadcast_external extends external_api {
     public static function check_broadcasts_parameters() {
         return new external_function_parameters(
             array(
-                'contextid' => new external_value(PARAM_INT, 'Context id', VALUE_REQUIRED, null, NULL_NOT_ALLOWED)
+                'contextid' => new external_value(PARAM_INT, 'Context id', VALUE_REQUIRED, null, NULL_NOT_ALLOWED),
+                'userid' => new external_value(PARAM_INT, 'User id', VALUE_REQUIRED, null, NULL_NOT_ALLOWED),
             )
             );
     }
@@ -174,19 +175,18 @@ class tool_broadcast_external extends external_api {
      * Check for broadcasts messages.
      *
      * @param int $contextid The context id of the user.
+     * @param int $userid The id of the user.
      * @return string $broadcasts JSON bool, true of user has broadcast messages.
      */
-    public static function check_broadcasts($contextid) {
-        global $USER;
-
+    public static function check_broadcasts($contextid, $userid) {
         // We always must pass webservice params through validate_parameters.
         self::validate_parameters(
             self::check_broadcasts_parameters(),
-            array('contextid' => $contextid)
+            array('contextid' => $contextid, 'userid' => $userid)
             );
 
         $broadcast = new \tool_broadcast\broadcast();
-        $broadcasts = $broadcast->check_broadcasts($contextid, $USER->id);
+        $broadcasts = $broadcast->check_broadcasts($contextid, $userid);
 
         return json_encode($broadcasts);
     }

@@ -122,7 +122,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
 
         $assign = new assign(context_module::instance($assignrow->cmid), false, false);
         $user = $generator->create_user();
-        $user->lastlogin = 1591842950;
+        $user->currentlogin = 1591842950;
         $DB->update_record('user', $user);
         $this->setUser($user);
 
@@ -179,7 +179,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
 
         $assign = new assign(context_module::instance($assignrow->cmid), false, false);
         $user = $generator->create_user();
-        $user->lastlogin = 1591842950;
+        $user->currentlogin = 1591842950;
         $DB->update_record('user', $user);
         $this->setUser($user);
 
@@ -210,7 +210,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
         $broadcast = new \tool_broadcast\broadcast();
         $broadcastid = $broadcast->create_broadcast($formdata);
 
-        $returnvalue = tool_broadcast_external::check_broadcasts($contextassignid);
+        $returnvalue = tool_broadcast_external::check_broadcasts($contextassignid, $user->id);
 
         $returnjson = external_api::clean_returnvalue(tool_broadcast_external::check_broadcasts_returns(), $returnvalue);
         $response = json_decode($returnjson, true);
@@ -233,7 +233,7 @@ class tool_broadcast_external_testcase extends externallib_advanced_testcase {
 
         $assign = new assign(context_module::instance($assignrow->cmid), false, false);
         $user = $generator->create_user();
-        $user->lastlogin = time() - 1000;
+        $user->currentlogin = time() - 1000;
         $this->setUser($user);
 
         // Enrol user into the course.

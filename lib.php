@@ -163,14 +163,14 @@ function tool_broadcast_output_fragment_table($args): string {
  * Adds required JS and startup values for broadcast Modals.
  */
 function tool_broadcast_before_footer(): void {
-    global $PAGE;
+    global $PAGE, $USER;
     $context = $PAGE->context;
     $createurl = new moodle_url('/admin/tool/broadcast/manage.php', ['id' => context_system::instance()->id]);
     $createpage = $PAGE->url->compare($createurl);
 
     // Only include the required JS on this page if user has the required capability to view messages.
     if (has_capability('tool/broadcast:viewbroadcasts', $context) && !$createpage) {
-        $PAGE->requires->js_call_amd('tool_broadcast/broadcast_modal', 'init', array($context->id));
+        $PAGE->requires->js_call_amd('tool_broadcast/broadcast_modal', 'init', array($context->id, $USER->id));
     }
 
 }

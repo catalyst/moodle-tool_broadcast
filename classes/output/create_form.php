@@ -127,7 +127,7 @@ class create_form extends \moodleform {
         }
 
         $broadcast = new \tool_broadcast\broadcast();
-        $courses = $broadcast->get_courses();
+        $courses = $broadcast->get_courses($contextid);
 
         $courseoptions = array(
             'multiple' => false,

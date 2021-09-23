@@ -304,9 +304,10 @@ class broadcast {
     /**
      * Helper method to get a list of courses that the user can create a broadcast in.
      *
+     * @param int $contextid Optional context id, if set the course with this context will be first in list
      * @return array $courses The list of courses.
      */
-    public function get_courses(): array {
+    public function get_courses(int $contextid = 0): array {
 
         $courses = array();
         $allcourses = get_courses('all', 'c.sortorder ASC', 'c.id, c.fullname, c.visible');
@@ -318,7 +319,12 @@ class broadcast {
                 continue;
             }
 
-            $courses[$course->id] = $course->fullname;
+            $courses[$course->id] = format_text($course->fullname);
+
+            // Use some array union trickery to move the current course to the first element in the array.
+            if (($contextid > 0) && ($context->id == $contextid)) {
+                $courses = array($course->id => $courses[$course->id]) + $courses;
+            }
 
         }
 
@@ -350,5 +356,20 @@ class broadcast {
         $broadcastnames = $DB->get_records_menu('tool_broadcast', array(), 'title ASC', 'id, title');
 
         return $broadcastnames;
+    }
+
+    /**
+     * Get the context of a broadcast message.
+     *
+     * @param int $broadcastid The id of the broadcast to get the name for.
+     * @return \context $context The context of the retrieved broadcast.
+     */
+    public function get_broadcast_context(int $broadcastid): \context {
+        global $DB;
+
+        $broadcastcontextid = $DB->get_field('tool_broadcast', 'contextid', array('id' => $broadcastid));
+        $context = \context::instance_by_id($broadcastcontextid);
+
+        return $context;
     }
 }

@@ -51,7 +51,8 @@ function tool_broadcast_extend_navigation_course($navigation, $course, $courseco
         $url,
         navigation_node::NODETYPE_LEAF,
         'tool_broadcast',
-        'tool_broadcast'
+        'tool_broadcast',
+        new pix_icon('i/bullhorn', get_string('pluginname', 'tool_broadcast'))
     );
 
     if ($PAGE->url->compare($url, URL_MATCH_BASE)) {
@@ -82,7 +83,8 @@ function tool_broadcast_extend_navigation_category_settings($navigation, $contex
         $url,
         navigation_node::NODETYPE_LEAF,
         'tool_broadcast',
-        'tool_broadcast'
+        'tool_broadcast',
+        new pix_icon('i/bullhorn', get_string('pluginname', 'tool_broadcast'))
     );
 
     if ($PAGE->url->compare($url, URL_MATCH_BASE)) {

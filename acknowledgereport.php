@@ -25,29 +25,27 @@
 require_once('../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
+require_login(null, false);
+
 $baseurl = $CFG->wwwroot . "/admin/tool/broadcast/acknowledgereport.php";
-
-// Calls require_login and performs permissions checks for admin pages.
-admin_externalpage_setup('tool_broadcast_report', '', null, '',
-    array('pagelayout' => 'admin'));
-
 $broadcastid = optional_param('broadcastid', 0, PARAM_INT);
 $page = optional_param('page', 0, PARAM_INT);
-
-$url = new moodle_url($baseurl);
-$context = context_system::instance();
-
-require_capability('tool/broadcast:createbroadcasts', $context);
 
 if ($broadcastid != 0) {
     $broadcast = new \tool_broadcast\broadcast();
     $broadcastname = $broadcast->get_broadcast_name($broadcastid);
     $title = get_string('acknowledgereportbroadcast', 'tool_broadcast', $broadcastname);
+    $context = $broadcast->get_broadcast_context($broadcastid);
 } else {
     $title = get_string('acknowledgereporttitle', 'tool_broadcast');
+    $context = context_system::instance();
 }
 
+$url = new moodle_url($baseurl);
+require_capability('tool/broadcast:createbroadcasts', $context);
+
 $PAGE->set_url($url);
+$PAGE->set_pagelayout('admin');
 $PAGE->set_context($context);
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
